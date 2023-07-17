@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="/getUser">
+      <input type="text" name="username" id="username" required />
+      <input type="text" name="email" id="email" required />
+      <input type="text" name="password" id="password" required />
+      <input type="text" name="nameFirst" id="nameFirst" required />
+      <input type="text" name="nameLast" id="nameLast" required />
+      <input type="text" name="dateOfBirth" id="dateOfBirth" required />
+      <button
+        type="submit"
+        name="createuserBtn"
+        id="createuserBtn"
+        onclick="createUser()"
+      >
+        Submit Details
+      </button>
+
+      <script src="../server/index.js"></script>
+    </form>
+  </body>
+</html>

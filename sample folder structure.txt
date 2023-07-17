@@ -1,0 +1,23 @@
+my-extension/
+├── client/
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── App.js
+│   │   ├── index.js
+│   │   └── ...
+│   ├── package.json
+│   ├── package-lock.json
+│   └── ...
+├── server/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── app.js
+│   ├── package.json
+│   ├── package-lock.json
+│   └── ...
+├── manifest.json
+└── ...
