@@ -4,16 +4,20 @@ dotenv.config();
 import pg from 'pg';
 const { Pool } = pg;
 // import {Pool} from 'pg';
-
-const USER = process.env.USER;
+console.log(process.env.USER);
+console.log(process.env.USERNAME);
+const DBUSER = process.env.DBUSER;
 const DATABASE = process.env.DATABASE;
 const PASSWORD = process.env.PASSWORD;
 const HOSTNAME = process.env.HOSTNAME;
-const PORT_NUMBER = process.env.PORT;
+const PORT_NUMBER = parseInt(process.env.PORT);
+
+console.log(DBUSER, DATABASE, PASSWORD, HOSTNAME, PORT_NUMBER);
+console.log(typeof DBUSER, typeof DATABASE, typeof PASSWORD, typeof HOSTNAME, typeof PORT_NUMBER);
 
 // creating a pool of connections
 const pool = new Pool({
-  user: USER,
+  user: DBUSER,
   host: HOSTNAME,
   database: DATABASE,
   password: PASSWORD,
