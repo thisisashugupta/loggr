@@ -3,15 +3,15 @@ dotenv.config();
 import pg from 'pg';
 const { Pool } = pg;
 // import {Pool} from 'pg';
-console.log(process.env.USER);
-console.log(process.env.USERNAME);
 const DBUSER = process.env.DBUSER;
 const DATABASE = process.env.DATABASE;
 const PASSWORD = process.env.PASSWORD;
 const HOSTNAME = process.env.HOSTNAME;
 const PORT_NUMBER = parseInt(process.env.PORT);
-console.log(DBUSER, DATABASE, PASSWORD, HOSTNAME, PORT_NUMBER);
-console.log(typeof DBUSER, typeof DATABASE, typeof PASSWORD, typeof HOSTNAME, typeof PORT_NUMBER);
+// console.log(process.env.USER);
+// console.log(process.env.USERNAME);
+// console.log(DBUSER, DATABASE, PASSWORD, HOSTNAME, PORT_NUMBER);
+// console.log(typeof DBUSER, typeof DATABASE, typeof PASSWORD, typeof HOSTNAME, typeof PORT_NUMBER);
 // creating a pool of connections
 const pool = new Pool({
     user: DBUSER,
@@ -102,6 +102,162 @@ export const deleteUser = async (user_id, passkey) => {
         console.log(`something went wrong in deleteUser \n${error}\nthis is not cool`);
     }
 };
+// task operations
+export const getTasks = async (user_id) => {
+    try {
+        const result = await pool.query(`
+    SELECT * FROM tasks WHERE user_id = $1;`, [user_id]);
+        if (result.rows) {
+            console.log(`showing all tasks`);
+            console.log(result.rows);
+        }
+        else {
+            console.log(`cannot show tasks`);
+        }
+        return result.rows;
+    }
+    catch (error) {
+        console.log(`something went wrong in getTasks \n${error}\nthis is not cool`);
+    }
+};
+export const createTask = async (user_id, title) => {
+    try {
+        const currentDate = new Date();
+        const result = await pool.query(`
+    INSERT INTO tasks (user_id, title, modified_at) VALUES ($1, $2, $3) RETURNING *;`, [user_id, title, currentDate]);
+        if (result.rows[0]) {
+            console.log(`added task`);
+            console.log(result.rows[0]);
+        }
+        else {
+            console.log(`cannot add task`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in createTask \n${error}\nthis is not cool`);
+    }
+};
+export const updateTask = async (task_id, title, checked) => {
+    try {
+        const currentDate = new Date();
+        const result = await pool.query(`
+    UPDATE tasks
+    SET title = $2, checked = $3, modified_at = $4
+    WHERE task_id = $1
+    RETURNING *;`, [task_id, title, checked, currentDate]);
+        if (result.rows[0]) {
+            console.log(`updated task`);
+            console.log(result.rows[0]);
+        }
+        else {
+            console.log(`cannot update task`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in updateTask \n${error}\nthis is not cool`);
+    }
+};
+export const deleteTask = async (task_id) => {
+    try {
+        const result = await pool.query(`
+    DELETE FROM tasks WHERE task_id = $1 RETURNING *;`, [task_id]);
+        if (result.rows[0]) {
+            console.log(`deleted task`);
+            console.log(result.rows[0]);
+        }
+        else {
+            console.log(`cannot delete task`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in deleteTask \n${error}\nthis is not cool`);
+    }
+};
+// bookmark operations
+export const getBookmarks = async (user_id) => {
+    try {
+        const result = await pool.query(`
+    SELECT * FROM bookmarks WHERE user_id = $1;`, [user_id]);
+        if (result.rows) {
+            console.log(`showing all bookmarks`);
+            console.log(result.rows);
+        }
+        else {
+            console.log(`cannot show bookmarks`);
+        }
+        return result.rows;
+    }
+    catch (error) {
+        console.log(`something went wrong in getBookmarks \n${error}\nthis is not cool`);
+    }
+};
+export const createBookmark = async (user_id, title, b_url, b_img) => {
+    try {
+        const currentDate = new Date();
+        const result = await pool.query(`
+    INSERT INTO bookmarks (title, b_url, b_img, user_id, modified_at) VALUES ($1, $2, $3, $4, $5) RETURNING *;`, [title, b_url, b_img, user_id, currentDate]);
+        if (result.rows[0]) {
+            console.log(`added bookmark`);
+            console.log(result.rows[0]);
+        }
+        else {
+            console.log(`cannot add task`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in createBookmark \n${error}\nthis is not cool`);
+    }
+};
+export const updateBookmark = async (bookmark_id, title, b_url, b_img) => {
+    try {
+        const currentDate = new Date();
+        const result = await pool.query(`
+    UPDATE bookmarks
+    SET title = $2, b_url = $3, b_img = $4, modified_at = $5
+    WHERE bookmark_id = $1
+    RETURNING *;`, [bookmark_id, title, b_url, b_img, currentDate]);
+        if (result.rows[0]) {
+            console.log(`updated bookmark`);
+            console.log(result.rows[0]);
+        }
+        else {
+            console.log(`cannot update bookmark`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in updateBookmark \n${error}\nthis is not cool`);
+    }
+};
+export const deleteBookmark = async (bookmark_id) => {
+    try {
+        const result = await pool.query(`
+    DELETE FROM bookmarks WHERE bookmark_id = $1 RETURNING *;`, [bookmark_id]);
+        if (result.rows[0]) {
+            console.log(`deleted bookmark`);
+            console.log(result.rows[0]);
+        }
+        else {
+            console.log(`cannot delete bookmark`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in deleteBookmark \n${error}\nthis is not cool`);
+    }
+};
+function today() {
+    const date = new Date().toJSON();
+    const currentDate = new Date();
+    console.log(currentDate);
+    console.log(date); // 2022-06-17T11:06:50.369Z
+    return date;
+}
+// console.log(`today is ${today()}`); // 2023-07-18T09:08:21.714Z
 // const openClientConnection = async () => {
 //   try {
 //     await client.connect(); /* connecting to the database */
@@ -150,41 +306,6 @@ export const deleteUser = async (user_id, passkey) => {
 //   }
 //   //   await closeClientConnection();
 //   // }
-// };
-// const showAllUsers = async () => {
-//   try {
-//     const allUsers = await pool.query(`SELECT * FROM users`);
-//     console.table(allUsers.rows);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-// const updateUser = async (
-//   user_id,
-//   dateofbirth,
-//   // username,
-//   // email,
-//   // passkey
-//   name_first,
-//   name_last
-// ) => {
-//   try {
-//     const result = await pool.query(
-//       `UPDATE users SET dateofbirth = $2, name_first = $3, name_last = $4 WHERE user_id = $1 RETURNING *;`,
-//       [user_id, dateofbirth, name_first, name_last]
-//     );
-//     console.log(`Updated user:`);
-//     console.table(result.rows);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-// const deleteUser = async (user_id) => {
-//   try {
-//     await pool.query(`DELETE FROM users WHERE user_id = $1`, [user_id]);
-//   } catch (error) {
-//     console.log(error);
-//   }
 // };
 // functions end here
 // createUser(
