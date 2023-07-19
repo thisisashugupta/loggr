@@ -1,18 +1,17 @@
 import dotenv from 'dotenv';
-dotenv.config();
+// import pg, { Pool, QueryResult } from 'pg';
 import pg from 'pg';
 const { Pool } = pg;
+// import pg from 'pg';
+// const { Pool, QueryResult } = pg; // pg is commonjs module
 // import {Pool} from 'pg';
-const DBUSER = process.env.DBUSER;
-const DATABASE = process.env.DATABASE;
-const PASSWORD = process.env.PASSWORD;
-const HOSTNAME = process.env.HOSTNAME;
-const PORT_NUMBER = parseInt(process.env.PORT);
-// console.log(process.env.USER);
-// console.log(process.env.USERNAME);
-// console.log(DBUSER, DATABASE, PASSWORD, HOSTNAME, PORT_NUMBER);
-// console.log(typeof DBUSER, typeof DATABASE, typeof PASSWORD, typeof HOSTNAME, typeof PORT_NUMBER);
-// creating a pool of connections
+dotenv.config();
+const DBUSER = process.env.DBUSER || '';
+const DATABASE = process.env.DATABASE || '';
+const PASSWORD = process.env.PASSWORD || '';
+const HOSTNAME = process.env.HOSTNAME || '';
+const PORT_NUMBER = parseInt(process.env.PORT || '5432', 10);
+// Creating a pool of connections
 const pool = new Pool({
     user: DBUSER,
     host: HOSTNAME,
@@ -20,34 +19,38 @@ const pool = new Pool({
     password: PASSWORD,
     port: PORT_NUMBER,
 });
-// thows error on connection
-pool.on("error", (err, client) => {
-    console.error("Unexpected error on idle client", err); // your callback here
+// Throws an error on connection
+pool.on('error', (err, client) => {
+    console.error('Unexpected error on idle client', err);
     console.log(client);
     process.exit(-1);
 });
 // user operations
+// User operations
 export const showAllUsers = async () => {
     try {
-        const allUsers = await pool.query(`SELECT * FROM users`);
-        console.table(allUsers.rows);
-        return allUsers.rows;
+        const query = 'SELECT * FROM users';
+        const result = await pool.query(query);
+        console.table(result.rows);
+        return result.rows;
     }
     catch (error) {
-        console.log(error);
+        console.error('Error fetching users:', error);
+        // console.log(error);
+        throw error; // Re-throw the error to be handled at a higher level
     }
 };
 export const getUser = async (user_id) => {
     try {
         const result = await pool.query(`SELECT * FROM users WHERE user_id = $1;`, [user_id]);
-        if (result.rows[0]) {
+        if (result.rows) {
             console.log(`user details of user_id=${user_id}`);
-            console.log(result.rows[0]);
+            console.log(result.rows);
         }
         else {
             console.log(`no user found with user_id=${user_id}`);
         }
-        return result.rows[0];
+        return result.rows;
     }
     catch (error) {
         console.log(`something went wrong in getUser \n${error}\nthis is not cool`);
@@ -250,14 +253,23 @@ export const deleteBookmark = async (bookmark_id) => {
         console.log(`something went wrong in deleteBookmark \n${error}\nthis is not cool`);
     }
 };
-function today() {
-    const date = new Date().toJSON();
-    const currentDate = new Date();
-    console.log(currentDate);
-    console.log(date); // 2022-06-17T11:06:50.369Z
-    return date;
-}
-// console.log(`today is ${today()}`); // 2023-07-18T09:08:21.714Z
+// Graceful shutdown
+const closePool = async () => {
+    console.log('Closing database pool...');
+    try {
+        await pool.end();
+        console.log('Database pool closed.');
+    }
+    catch (error) {
+        console.error('Error closing the database pool:', error);
+    }
+};
+// Handle SIGINT signal for graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Received SIGINT. Starting graceful shutdown...');
+    await closePool();
+    process.exit(0);
+});
 // const openClientConnection = async () => {
 //   try {
 //     await client.connect(); /* connecting to the database */

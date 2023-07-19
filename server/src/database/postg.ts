@@ -1,21 +1,47 @@
 import dotenv from 'dotenv';
-dotenv.config();
-
 import pg from 'pg';
 const { Pool } = pg;
-// import {Pool} from 'pg';
+// import pg, { Pool, QueryResult } from 'pg';
 
-const DBUSER = process.env.DBUSER;
-const DATABASE = process.env.DATABASE;
-const PASSWORD = process.env.PASSWORD;
-const HOSTNAME = process.env.HOSTNAME;
-const PORT_NUMBER = parseInt(process.env.PORT);
-// console.log(process.env.USER);
-// console.log(process.env.USERNAME);
-// console.log(DBUSER, DATABASE, PASSWORD, HOSTNAME, PORT_NUMBER);
-// console.log(typeof DBUSER, typeof DATABASE, typeof PASSWORD, typeof HOSTNAME, typeof PORT_NUMBER);
+dotenv.config();
 
-// creating a pool of connections
+interface User {
+  user_id: number;
+  dateofbirth: string;
+  username: string;
+  email: string;
+  passkey: string;
+  name_first: string;
+  name_last: string;
+}
+
+interface Task {
+  task_id: number;
+  title: string;
+  checked: boolean;
+  user_id: number;
+  modified_at: string;
+}
+
+interface Bookmark {
+  bookmark_id: number;
+  title?: string;
+  b_url: string;
+  b_img?: string;
+  user_id: number;
+  modified_at?: string;
+}
+
+
+
+
+const DBUSER: string = process.env.DBUSER || '';
+const DATABASE: string = process.env.DATABASE || '';
+const PASSWORD: string = process.env.PASSWORD || '';
+const HOSTNAME: string = process.env.HOSTNAME || '';
+const PORT_NUMBER: number = parseInt(process.env.PORT || '5432', 10);
+
+// Creating a pool of connections
 const pool = new Pool({
   user: DBUSER,
   host: HOSTNAME,
@@ -24,22 +50,27 @@ const pool = new Pool({
   port: PORT_NUMBER,
 });
 
-// thows error on connection
-pool.on("error", (err, client) => {
-  console.error("Unexpected error on idle client", err); // your callback here
+// Throws an error on connection
+pool.on('error', (err: Error, client: pg.PoolClient) => {
+  console.error('Unexpected error on idle client', err);
   console.log(client);
   process.exit(-1);
 });
 
 // user operations
 
-export const showAllUsers = async () => {
+// User operations
+
+export const showAllUsers = async (): Promise<User[]> => {
   try {
-    const allUsers = await pool.query(`SELECT * FROM users`);
-    console.table(allUsers.rows);
-    return allUsers.rows;
+    const query = 'SELECT * FROM users';
+    const result = await pool.query(query);
+    console.table(result.rows);
+    return result.rows;
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching users:', error);
+    // console.log(error);
+    throw error; // Re-throw the error to be handled at a higher level
   }
 };
 
@@ -49,19 +80,18 @@ export const getUser = async (user_id) => {
       `SELECT * FROM users WHERE user_id = $1;`,
       [user_id]
     );
-    if (result.rows[0]) {
+    if (result.rows) {
       console.log(`user details of user_id=${user_id}`);
-
-      console.log(result.rows[0]);
+      console.log(result.rows);
     }
     else {
       console.log(`no user found with user_id=${user_id}`);
     }
-    return result.rows[0];
+    return result.rows;
   } catch (error) {
     console.log(`something went wrong in getUser \n${error}\nthis is not cool`);
   }
-}
+};
 
 export const createUser = async (
   dob,
@@ -70,7 +100,7 @@ export const createUser = async (
   passkey,
   name_first,
   name_last
-) => {
+): Promise<User> => {
   try {
     const result = await pool.query(
       `INSERT INTO users (dateofbirth, username, email, passkey, name_first, name_last)
@@ -88,7 +118,7 @@ export const createUser = async (
   }
 };
 
-export const updateUser = async (user_id, dateofbirth, username, email, passkey, name_first, name_last) => {
+export const updateUser = async (user_id, dateofbirth, username, email, passkey, name_first, name_last): Promise<User> => {
   try {
     const result = await pool.query(
       `UPDATE users SET 
@@ -111,7 +141,7 @@ export const updateUser = async (user_id, dateofbirth, username, email, passkey,
   }
 }
 
-export const deleteUser = async (user_id, passkey) => {
+export const deleteUser = async (user_id, passkey): Promise<User> => {
   try {
     const result = await pool.query(
       `DELETE FROM users WHERE user_id = $1 and passkey = $2 RETURNING *;
@@ -133,7 +163,7 @@ export const deleteUser = async (user_id, passkey) => {
 
 // task operations
 
-export const getTasks = async (user_id: Number): Promise<Object> => {
+export const getTasks = async (user_id: Number): Promise<Task[]> => {
   try {
     const result = await pool.query(`
     SELECT * FROM tasks WHERE user_id = $1;`,
@@ -151,7 +181,7 @@ export const getTasks = async (user_id: Number): Promise<Object> => {
 
 }
 
-export const createTask = async (user_id: Number, title: String): Promise<Object> => {
+export const createTask = async (user_id: Number, title: String): Promise<Task> => {
   try {
     const currentDate = new Date();
     const result = await pool.query(`
@@ -169,7 +199,7 @@ export const createTask = async (user_id: Number, title: String): Promise<Object
   }
 }
 
-export const updateTask = async (task_id: Number, title: String, checked: Boolean): Promise<Object> => {
+export const updateTask = async (task_id: Number, title: String, checked: Boolean): Promise<Task> => {
   try {
     const currentDate = new Date();
     const result = await pool.query(`
@@ -190,7 +220,7 @@ export const updateTask = async (task_id: Number, title: String, checked: Boolea
   }
 }
 
-export const deleteTask = async (task_id: Number): Promise<Object> => {
+export const deleteTask = async (task_id: Number): Promise<Task> => {
   try {
     const result = await pool.query(`
     DELETE FROM tasks WHERE task_id = $1 RETURNING *;`,
@@ -209,8 +239,7 @@ export const deleteTask = async (task_id: Number): Promise<Object> => {
 
 // bookmark operations
 
-
-export const getBookmarks = async (user_id: Number): Promise<Object> => {
+export const getBookmarks = async (user_id: Number): Promise<Bookmark[]> => {
   try {
     const result = await pool.query(`
     SELECT * FROM bookmarks WHERE user_id = $1;`,
@@ -227,7 +256,7 @@ export const getBookmarks = async (user_id: Number): Promise<Object> => {
   }
 }
 
-export const createBookmark = async (user_id: Number, title: String, b_url: String, b_img: String): Promise<Object> => {
+export const createBookmark = async (user_id: Number, title: String, b_url: String, b_img: String): Promise<Bookmark> => {
   try {
     const currentDate = new Date();
     const result = await pool.query(`
@@ -245,7 +274,7 @@ export const createBookmark = async (user_id: Number, title: String, b_url: Stri
   }
 }
 
-export const updateBookmark = async (bookmark_id: Number, title: String, b_url: String, b_img: String): Promise<Object> => {
+export const updateBookmark = async (bookmark_id: Number, title: String, b_url: String, b_img: String): Promise<Bookmark> => {
   try {
     const currentDate = new Date();
     const result = await pool.query(`
@@ -266,7 +295,7 @@ export const updateBookmark = async (bookmark_id: Number, title: String, b_url: 
   }
 }
 
-export const deleteBookmark = async (bookmark_id: Number): Promise<Object> => {
+export const deleteBookmark = async (bookmark_id: Number): Promise<Bookmark> => {
   try {
     const result = await pool.query(`
     DELETE FROM bookmarks WHERE bookmark_id = $1 RETURNING *;`,
@@ -284,15 +313,25 @@ export const deleteBookmark = async (bookmark_id: Number): Promise<Object> => {
 }
 
 
-function today(): String {
-  const date = new Date().toJSON();
-  const currentDate = new Date();
-  console.log(currentDate);
-  console.log(date); // 2022-06-17T11:06:50.369Z
-  return date;
-}
 
-// console.log(`today is ${today()}`); // 2023-07-18T09:08:21.714Z
+// Graceful shutdown
+const closePool = async (): Promise<void> => {
+  console.log('Closing database pool...');
+  try {
+    await pool.end();
+    console.log('Database pool closed.');
+  } catch (error) {
+    console.error('Error closing the database pool:', error);
+  }
+};
+
+// Handle SIGINT signal for graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('Received SIGINT. Starting graceful shutdown...');
+  await closePool();
+  process.exit(0);
+});
+
 
 
 // const openClientConnection = async () => {

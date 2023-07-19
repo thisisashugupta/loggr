@@ -11,6 +11,8 @@ export const resolvers = {
   Query: {
     getAllUsers: async (parent, args) => {
       try {
+
+
         return await showAllUsers();
       } catch (error) {
         console.log(`Something went wrong in getAllUsers query: \n${error}`);
@@ -48,6 +50,8 @@ export const resolvers = {
 
   Mutation: {
 
+    // user
+
     createUser: async (parent, args) => {
       try {
         const { dateofbirth, username, email, passkey, name_first, name_last } = args.createUserInput;
@@ -77,6 +81,8 @@ export const resolvers = {
         throw new Error('Failed to delete user.');
       }
     },
+
+    // tasks
 
     createTask: async (parent, args) => {
       try {
@@ -108,6 +114,7 @@ export const resolvers = {
       }
     },
 
+    // bookmarks
 
     createBookmark: async (parent, args) => {
       try {
