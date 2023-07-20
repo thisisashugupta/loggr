@@ -2,10 +2,10 @@
 export const typeDefs = `#graphql
 
   type Query {
-    getAllUsers: [User]
+    getAllUsers: [User]!
     getUser(user_id: Int!): User
-    getTasks(user_id: Int!): [Task]
-    getBookmarks(user_id: Int!): [Bookmark]
+    getTasks(user_id: Int!): [Task]!
+    getBookmarks(user_id: Int!): [Bookmark]!
   }
 
   type User {
@@ -19,7 +19,7 @@ export const typeDefs = `#graphql
   }
 
   type Task {
-    task_id: Int!
+    task_id: ID!
     title: String!
     checked: Boolean!
     modified_at: String!
@@ -27,17 +27,18 @@ export const typeDefs = `#graphql
   }
 
   type Bookmark {
-    bookmark_id: Int!
+    bookmark_id: ID!
     title: String
     b_url: String!
     b_img: String
+    modified_at: String!
     user_id: Int!
   }
 
   type Mutation {
-    createUser(createUserInput: CreateUserInput!): User
-    updateUser(updateUserInput: UpdateUserInput!): User
-    deleteUser(deleteUserInput: DeleteUserInput!): User
+    createUser(input: CreateUserInput!): User
+    updateUser(input: UpdateUserInput!): User
+    deleteUser(input: DeleteUserInput!): User
     createTask(input: CreateTaskInput): Task
     updateTask(input: UpdateTaskInput): Task
     deleteTask(input: DeleteTaskInput): Task

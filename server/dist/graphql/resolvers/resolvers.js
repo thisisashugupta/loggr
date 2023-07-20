@@ -43,9 +43,10 @@ export const resolvers = {
         }
     },
     Mutation: {
+        // user
         createUser: async (parent, args) => {
             try {
-                const { dateofbirth, username, email, passkey, name_first, name_last } = args.createUserInput;
+                const { dateofbirth, username, email, passkey, name_first, name_last } = args.input;
                 return await createUser(dateofbirth, username, email, passkey, name_first, name_last);
             }
             catch (error) {
@@ -55,7 +56,7 @@ export const resolvers = {
         },
         updateUser: async (parent, args) => {
             try {
-                const { user_id, dateofbirth, username, email, passkey, name_first, name_last } = args.updateUserInput;
+                const { user_id, dateofbirth, username, email, passkey, name_first, name_last } = args.input;
                 return await updateUser(user_id, dateofbirth, username, email, passkey, name_first, name_last);
             }
             catch (error) {
@@ -65,7 +66,7 @@ export const resolvers = {
         },
         deleteUser: async (parent, args) => {
             try {
-                const { user_id, passkey } = args.deleteUserInput;
+                const { user_id, passkey } = args.input;
                 return await deleteUser(user_id, passkey);
             }
             catch (error) {
@@ -73,6 +74,7 @@ export const resolvers = {
                 throw new Error('Failed to delete user.');
             }
         },
+        // tasks
         createTask: async (parent, args) => {
             try {
                 const { user_id, title } = args.input;
@@ -103,6 +105,7 @@ export const resolvers = {
                 throw new Error('Failed to delete task.');
             }
         },
+        // bookmarks
         createBookmark: async (parent, args) => {
             try {
                 const { user_id, title, b_url, b_img } = args.input;

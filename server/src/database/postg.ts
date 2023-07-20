@@ -32,9 +32,6 @@ interface Bookmark {
   modified_at?: string;
 }
 
-
-
-
 const DBUSER: string = process.env.DBUSER || '';
 const DATABASE: string = process.env.DATABASE || '';
 const PASSWORD: string = process.env.PASSWORD || '';
@@ -56,8 +53,6 @@ pool.on('error', (err: Error, client: pg.PoolClient) => {
   console.log(client);
   process.exit(-1);
 });
-
-// user operations
 
 // User operations
 
@@ -82,7 +77,7 @@ export const getUser = async (user_id) => {
     );
     if (result.rows) {
       console.log(`user details of user_id=${user_id}`);
-      console.log(result.rows);
+      console.table(result.rows);
     }
     else {
       console.log(`no user found with user_id=${user_id}`);
@@ -108,7 +103,7 @@ export const createUser = async (
       [dob, username, email, passkey, name_first, name_last]
     );
     console.log(`new user added`);
-    console.log(result.rows[0]);
+    console.table(result.rows);
     return result.rows[0];
 
   } catch (error) {
@@ -134,7 +129,7 @@ export const updateUser = async (user_id, dateofbirth, username, email, passkey,
       [user_id, dateofbirth, username, email, passkey, name_first, name_last]
     );
     console.log(`user updated with id=${user_id}`);
-    console.log(result.rows[0]);
+    console.table(result.rows);
     return result.rows[0];
   } catch (error) {
     console.log(`something went wrong in updateUser \n${error}\nthis is not cool`);
@@ -150,7 +145,7 @@ export const deleteUser = async (user_id, passkey): Promise<User> => {
     );
     if (result.rows[0]) {
       console.log(`user deleted with id=${user_id}`);
-      console.log(result.rows[0]);
+      console.table(result.rows);
     }
     else {
       console.log(`user was not deleted with id=${user_id}`);
@@ -170,7 +165,7 @@ export const getTasks = async (user_id: Number): Promise<Task[]> => {
       [user_id]);
     if (result.rows) {
       console.log(`showing all tasks`);
-      console.log(result.rows);
+      console.table(result.rows);
     } else {
       console.log(`cannot show tasks`);
     }
@@ -189,7 +184,7 @@ export const createTask = async (user_id: Number, title: String): Promise<Task> 
       [user_id, title, currentDate]);
     if (result.rows[0]) {
       console.log(`added task`);
-      console.log(result.rows[0]);
+      console.table(result.rows);
     } else {
       console.log(`cannot add task`);
     }
@@ -210,7 +205,7 @@ export const updateTask = async (task_id: Number, title: String, checked: Boolea
       [task_id, title, checked, currentDate]);
     if (result.rows[0]) {
       console.log(`updated task`);
-      console.log(result.rows[0]);
+      console.table(result.rows);
     } else {
       console.log(`cannot update task`);
     }
@@ -227,7 +222,7 @@ export const deleteTask = async (task_id: Number): Promise<Task> => {
       [task_id]);
     if (result.rows[0]) {
       console.log(`deleted task`);
-      console.log(result.rows[0]);
+      console.table(result.rows);
     } else {
       console.log(`cannot delete task`);
     }
@@ -246,7 +241,7 @@ export const getBookmarks = async (user_id: Number): Promise<Bookmark[]> => {
       [user_id]);
     if (result.rows) {
       console.log(`showing all bookmarks`);
-      console.log(result.rows);
+      console.table(result.rows);
     } else {
       console.log(`cannot show bookmarks`);
     }
@@ -264,7 +259,7 @@ export const createBookmark = async (user_id: Number, title: String, b_url: Stri
       [title, b_url, b_img, user_id, currentDate]);
     if (result.rows[0]) {
       console.log(`added bookmark`);
-      console.log(result.rows[0]);
+      console.table(result.rows);
     } else {
       console.log(`cannot add task`);
     }
@@ -285,7 +280,7 @@ export const updateBookmark = async (bookmark_id: Number, title: String, b_url: 
       [bookmark_id, title, b_url, b_img, currentDate]);
     if (result.rows[0]) {
       console.log(`updated bookmark`);
-      console.log(result.rows[0]);
+      console.table(result.rows);
     } else {
       console.log(`cannot update bookmark`);
     }
@@ -302,7 +297,7 @@ export const deleteBookmark = async (bookmark_id: Number): Promise<Bookmark> => 
       [bookmark_id]);
     if (result.rows[0]) {
       console.log(`deleted bookmark`);
-      console.log(result.rows[0]);
+      console.table(result.rows);
     } else {
       console.log(`cannot delete bookmark`);
     }
@@ -337,14 +332,14 @@ process.on('SIGINT', async () => {
 // const openClientConnection = async () => {
 //   try {
 //     await client.connect(); /* connecting to the database */
-//     console.log(
-//       `Connected to PostgreSQL to database ${DATABASE} as user ${USER}`
-//     );
+// console.log(
+//   `Connected to PostgreSQL to database ${DATABASE} as user ${USER}`
+// );
 //   } catch (error) {
-//     console.log(
-//       `something went wrong in openConnection ${error} this is not cool`
-//     );
-//   }
+//   console.log(
+//     `something went wrong in openConnection ${error} this is not cool`
+//   );
+// }
 // };
 
 // const closeClientConnection = async () => {

@@ -1,10 +1,7 @@
 import dotenv from 'dotenv';
-// import pg, { Pool, QueryResult } from 'pg';
 import pg from 'pg';
 const { Pool } = pg;
-// import pg from 'pg';
-// const { Pool, QueryResult } = pg; // pg is commonjs module
-// import {Pool} from 'pg';
+// import pg, { Pool, QueryResult } from 'pg';
 dotenv.config();
 const DBUSER = process.env.DBUSER || '';
 const DATABASE = process.env.DATABASE || '';
@@ -25,7 +22,6 @@ pool.on('error', (err, client) => {
     console.log(client);
     process.exit(-1);
 });
-// user operations
 // User operations
 export const showAllUsers = async () => {
     try {
@@ -45,7 +41,7 @@ export const getUser = async (user_id) => {
         const result = await pool.query(`SELECT * FROM users WHERE user_id = $1;`, [user_id]);
         if (result.rows) {
             console.log(`user details of user_id=${user_id}`);
-            console.log(result.rows);
+            console.table(result.rows);
         }
         else {
             console.log(`no user found with user_id=${user_id}`);
@@ -61,7 +57,7 @@ export const createUser = async (dob, username, email, passkey, name_first, name
         const result = await pool.query(`INSERT INTO users (dateofbirth, username, email, passkey, name_first, name_last)
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`, [dob, username, email, passkey, name_first, name_last]);
         console.log(`new user added`);
-        console.log(result.rows[0]);
+        console.table(result.rows);
         return result.rows[0];
     }
     catch (error) {
@@ -81,7 +77,7 @@ export const updateUser = async (user_id, dateofbirth, username, email, passkey,
     RETURNING *;
     `, [user_id, dateofbirth, username, email, passkey, name_first, name_last]);
         console.log(`user updated with id=${user_id}`);
-        console.log(result.rows[0]);
+        console.table(result.rows);
         return result.rows[0];
     }
     catch (error) {
@@ -94,7 +90,7 @@ export const deleteUser = async (user_id, passkey) => {
     `, [user_id, passkey]);
         if (result.rows[0]) {
             console.log(`user deleted with id=${user_id}`);
-            console.log(result.rows[0]);
+            console.table(result.rows);
         }
         else {
             console.log(`user was not deleted with id=${user_id}`);
@@ -112,7 +108,7 @@ export const getTasks = async (user_id) => {
     SELECT * FROM tasks WHERE user_id = $1;`, [user_id]);
         if (result.rows) {
             console.log(`showing all tasks`);
-            console.log(result.rows);
+            console.table(result.rows);
         }
         else {
             console.log(`cannot show tasks`);
@@ -130,7 +126,7 @@ export const createTask = async (user_id, title) => {
     INSERT INTO tasks (user_id, title, modified_at) VALUES ($1, $2, $3) RETURNING *;`, [user_id, title, currentDate]);
         if (result.rows[0]) {
             console.log(`added task`);
-            console.log(result.rows[0]);
+            console.table(result.rows);
         }
         else {
             console.log(`cannot add task`);
@@ -151,7 +147,7 @@ export const updateTask = async (task_id, title, checked) => {
     RETURNING *;`, [task_id, title, checked, currentDate]);
         if (result.rows[0]) {
             console.log(`updated task`);
-            console.log(result.rows[0]);
+            console.table(result.rows);
         }
         else {
             console.log(`cannot update task`);
@@ -168,7 +164,7 @@ export const deleteTask = async (task_id) => {
     DELETE FROM tasks WHERE task_id = $1 RETURNING *;`, [task_id]);
         if (result.rows[0]) {
             console.log(`deleted task`);
-            console.log(result.rows[0]);
+            console.table(result.rows);
         }
         else {
             console.log(`cannot delete task`);
@@ -186,7 +182,7 @@ export const getBookmarks = async (user_id) => {
     SELECT * FROM bookmarks WHERE user_id = $1;`, [user_id]);
         if (result.rows) {
             console.log(`showing all bookmarks`);
-            console.log(result.rows);
+            console.table(result.rows);
         }
         else {
             console.log(`cannot show bookmarks`);
@@ -204,7 +200,7 @@ export const createBookmark = async (user_id, title, b_url, b_img) => {
     INSERT INTO bookmarks (title, b_url, b_img, user_id, modified_at) VALUES ($1, $2, $3, $4, $5) RETURNING *;`, [title, b_url, b_img, user_id, currentDate]);
         if (result.rows[0]) {
             console.log(`added bookmark`);
-            console.log(result.rows[0]);
+            console.table(result.rows);
         }
         else {
             console.log(`cannot add task`);
@@ -225,7 +221,7 @@ export const updateBookmark = async (bookmark_id, title, b_url, b_img) => {
     RETURNING *;`, [bookmark_id, title, b_url, b_img, currentDate]);
         if (result.rows[0]) {
             console.log(`updated bookmark`);
-            console.log(result.rows[0]);
+            console.table(result.rows);
         }
         else {
             console.log(`cannot update bookmark`);
@@ -242,7 +238,7 @@ export const deleteBookmark = async (bookmark_id) => {
     DELETE FROM bookmarks WHERE bookmark_id = $1 RETURNING *;`, [bookmark_id]);
         if (result.rows[0]) {
             console.log(`deleted bookmark`);
-            console.log(result.rows[0]);
+            console.table(result.rows);
         }
         else {
             console.log(`cannot delete bookmark`);
@@ -273,14 +269,14 @@ process.on('SIGINT', async () => {
 // const openClientConnection = async () => {
 //   try {
 //     await client.connect(); /* connecting to the database */
-//     console.log(
-//       `Connected to PostgreSQL to database ${DATABASE} as user ${USER}`
-//     );
+// console.log(
+//   `Connected to PostgreSQL to database ${DATABASE} as user ${USER}`
+// );
 //   } catch (error) {
-//     console.log(
-//       `something went wrong in openConnection ${error} this is not cool`
-//     );
-//   }
+//   console.log(
+//     `something went wrong in openConnection ${error} this is not cool`
+//   );
+// }
 // };
 // const closeClientConnection = async () => {
 //   try {
