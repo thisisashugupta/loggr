@@ -1,4 +1,8 @@
-/**
+/*
+
+client will send a request to fetch url's title and favicon
+- client will send the title to the database 
+- client will store the favicon in browser's local storage
 
 const { Pool } = require("pg");
 

@@ -1,5 +1,6 @@
 // import sql query functions from index.js module
 import { showAllUsers, getUser, createUser, updateUser, deleteUser, getTasks, createTask, updateTask, deleteTask, getBookmarks, createBookmark, updateBookmark, deleteBookmark } from "../../database/postg.js";
+import { fetchWebpageInfo } from "../../fetching.js";
 export const resolvers = {
     Query: {
         getAllUsers: async (parent, args) => {
@@ -108,8 +109,11 @@ export const resolvers = {
         // bookmarks
         createBookmark: async (parent, args) => {
             try {
-                const { user_id, title, b_url, b_img } = args.input;
-                return await createBookmark(user_id, title, b_url, b_img);
+                const { user_id, b_url, title } = args.input;
+                const answer = await fetchWebpageInfo(b_url);
+                if (title)
+                    return await createBookmark(user_id, title, b_url, answer.favicon);
+                return await createBookmark(user_id, answer.title, b_url, answer.favicon);
             }
             catch (error) {
                 console.log(`Something went wrong in createBookmark mutation: \n${error}`);

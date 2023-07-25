@@ -5,6 +5,10 @@ const { Pool } = pg;
 
 dotenv.config();
 
+
+// here i have to define the interface for type checking
+// it is not tied to the database schema
+// there can be errors in a large codebase in defining the interfaces, since they are not directly tied to table schema
 interface User {
   user_id: number;
   dateofbirth: string;

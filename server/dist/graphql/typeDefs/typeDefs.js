@@ -39,12 +39,12 @@ export const typeDefs = `#graphql
     createUser(input: CreateUserInput!): User
     updateUser(input: UpdateUserInput!): User
     deleteUser(input: DeleteUserInput!): User
-    createTask(input: CreateTaskInput): Task
-    updateTask(input: UpdateTaskInput): Task
-    deleteTask(input: DeleteTaskInput): Task
-    createBookmark(input: CreateBookmarkInput): Bookmark
-    updateBookmark(input: UpdateBookmarkInput): Bookmark
-    deleteBookmark(input: DeleteBookmarkInput): Bookmark
+    createTask(input: CreateTaskInput!): Task
+    updateTask(input: UpdateTaskInput!): Task
+    deleteTask(input: DeleteTaskInput!): Task
+    createBookmark(input: CreateBookmarkInput!): Bookmark
+    updateBookmark(input: UpdateBookmarkInput!): Bookmark
+    deleteBookmark(input: DeleteBookmarkInput!): Bookmark
   }
 
   input DeleteBookmarkInput {
@@ -59,9 +59,8 @@ export const typeDefs = `#graphql
   }
 
   input CreateBookmarkInput {
-    title: String!
+    title: String
     b_url: String!
-    b_img: String
     user_id: Int!
   }
 
