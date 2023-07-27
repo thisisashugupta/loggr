@@ -3,8 +3,7 @@ import cors from 'cors';
 import dotenv from "dotenv";
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from "@apollo/server/express4";
-import { resolvers } from "./graphql/resolvers/resolvers.js";
-import { typeDefs } from "./graphql/typeDefs/typeDefs.js";
+import { typeDefs, resolvers } from "./graphql/index.js";
 dotenv.config();
 const app = express();
 const port = 1337;
@@ -24,9 +23,12 @@ const bootstrapServer = async () => {
     });
 };
 bootstrapServer();
+// standalone graphql server
 // import { startStandaloneServer } from '@apollo/server/standalone';
+// import { resolvers } from "./graphql/resolvers/resolvers.js";
+// import { typeDefs } from "./graphql/typeDefs/typeDefs.js";
 // const apolloserver = new ApolloServer({ typeDefs, resolvers });
 // const { url } = await startStandaloneServer(apolloserver, {
-//     listen: { port: port },
+//     listen: { port: 4000 },
 // });
 // console.log(`🚀  Apollo Server ready at: ${url}`);

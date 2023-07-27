@@ -1,0 +1,32 @@
+type Query {
+  getTasks(user_id: Int!): [Task]!
+}
+
+type Task {
+  task_id: ID!
+  title: String!
+  checked: Boolean!
+  modified_at: String!
+  user_id: Int!
+}
+
+type Mutation {
+  createTask(input: CreateTaskInput!): Task
+  updateTask(input: UpdateTaskInput!): Task
+  deleteTask(input: DeleteTaskInput!): Task
+}
+
+input DeleteTaskInput {
+  task_id: Int!
+}
+
+input UpdateTaskInput {
+  task_id: Int!
+  title: String!
+  checked: Boolean!
+}
+
+input CreateTaskInput {
+  user_id: Int!
+  title: String!
+}
