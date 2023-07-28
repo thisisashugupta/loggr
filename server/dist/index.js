@@ -10,12 +10,16 @@ const port = 1337;
 const bootstrapServer = async () => {
     const apolloserver = new ApolloServer({ typeDefs, resolvers });
     await apolloserver.start();
+    // view engine setup
+    app.set("views", "src/views");
+    app.set("view engine", "ejs");
     app.use(cors());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use("/graphql", expressMiddleware(apolloserver));
     app.get("/", (req, res) => {
-        res.send("Response received from Home route");
+        res.render("userform");
+        // res.send("Response received from Home route");
     });
     app.listen(port, () => {
         console.log(`🚀  Express ready at http://localhost:${port}`);
