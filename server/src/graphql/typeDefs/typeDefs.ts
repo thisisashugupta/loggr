@@ -4,8 +4,16 @@ export const typeDefs = `#graphql
   type Query {
     getAllUsers: [User]!
     getUser(user_id: Int!): User
+    getAllTaskGroups(user_id: Int!): [TaskGroup]!
+    getTaskGroup(tg_id: Int!): TaskGroup
     getTasks(user_id: Int!): [Task]!
     getBookmarks(user_id: Int!): [Bookmark]!
+  }
+
+  type TaskGroup {
+    tg_id: ID!
+    tg_name: String
+    user_id: Int!
   }
 
   type User {
@@ -42,9 +50,26 @@ export const typeDefs = `#graphql
     createTask(input: CreateTaskInput!): Task
     updateTask(input: UpdateTaskInput!): Task
     deleteTask(input: DeleteTaskInput!): Task
+    createTaskGroup(input: CreateTaskGroupInput!): TaskGroup
+    updateTaskGroup(input: UpdateTaskGroupInput!): TaskGroup
+    deleteTaskGroup(input: DeleteTaskGroupInput!): TaskGroup
     createBookmark(input: CreateBookmarkInput!): Bookmark
     updateBookmark(input: UpdateBookmarkInput!): Bookmark
     deleteBookmark(input: DeleteBookmarkInput!): Bookmark
+  }
+
+  input CreateTaskGroupInput {
+    tg_name: String
+    user_id: Int!
+  }
+
+  input UpdateTaskGroupInput {
+    tg_id: ID!
+    tg_name: String!
+  }
+
+  input DeleteTaskGroupInput {
+    tg_id: ID!
   }
 
   input DeleteBookmarkInput {

@@ -101,6 +101,92 @@ export const deleteUser = async (user_id, passkey) => {
         console.log(`something went wrong in deleteUser \n${error}\nthis is not cool`);
     }
 };
+// TaskGroup Operations
+export const getAllTaskGroups = async (user_id) => {
+    try {
+        const result = await pool.query(`SELECT * FROM taskgroups WHERE user_id = $1;
+    `, [user_id]);
+        if (result.rows) {
+            console.log(`user deleted with id=${user_id}`);
+            console.table(result.rows);
+        }
+        else {
+            console.log(`user was not deleted with id=${user_id}`);
+        }
+        return result.rows;
+    }
+    catch (error) {
+        console.log(`something went wrong in getTaskGroups \n${error}\nthis is not cool`);
+    }
+};
+export const getTaskGroup = async (tg_id) => {
+    try {
+        const result = await pool.query(`SELECT * FROM taskgroups WHERE tg_id = $1;
+    `, [tg_id]);
+        if (result.rows[0]) {
+            console.log(`user deleted with id=${tg_id}`);
+            console.table(result.rows);
+        }
+        else {
+            console.log(`user was not deleted with id=${tg_id}`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in getTaskGroup \n${error}\nthis is not cool`);
+    }
+};
+export const createTaskGroup = async (user_id, tg_name) => {
+    try {
+        const result = await pool.query(`INSERT INTO taskgroups (tg_name, user_id) VALUES ($1, $2) RETURNING *;
+    `, [tg_name, user_id]);
+        if (result.rows) {
+            console.log(`TaskGroup added with id=${result.rows[0].tg_id}`);
+            console.table(result.rows);
+        }
+        else {
+            console.log(`TaskGroup was not added`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in createTaskGroup \n${error}\nthis is not cool`);
+    }
+};
+export const updateTaskGroup = async (tg_id, tg_name) => {
+    try {
+        const result = await pool.query(`UPDATE taskgroups SET tg_name = $1 WHERE tg_id = $2 RETURNING *;
+    `, [tg_name, tg_id]);
+        if (result.rows) {
+            console.log(`TaskGroup updated with tg_id=${tg_id}`);
+            console.table(result.rows);
+        }
+        else {
+            console.log(`TaskGroup was not updated with tg_id=${tg_id}`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in updateTaskGroup \n${error}\nthis is not cool`);
+    }
+};
+export const deleteTaskGroup = async (tg_id) => {
+    try {
+        const result = await pool.query(`DELETE FROM taskgroups WHERE tg_id = $1 RETURNING *;
+    `, [tg_id]);
+        if (result.rows[0]) {
+            console.log(`TaskGroup deleted with id=${tg_id}`);
+            console.table(result.rows);
+        }
+        else {
+            console.log(`TaskGroup was not deleted with id=${tg_id}`);
+        }
+        return result.rows[0];
+    }
+    catch (error) {
+        console.log(`something went wrong in deleteTaskGroup \n${error}\nthis is not cool`);
+    }
+};
 // task operations
 export const getTasks = async (user_id) => {
     try {

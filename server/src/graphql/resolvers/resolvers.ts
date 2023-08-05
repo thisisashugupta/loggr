@@ -3,6 +3,7 @@ import {
   showAllUsers,
   getUser, createUser, updateUser, deleteUser,
   getTasks, createTask, updateTask, deleteTask,
+  getAllTaskGroups, getTaskGroup, createTaskGroup, updateTaskGroup, deleteTaskGroup,
   getBookmarks, createBookmark, updateBookmark, deleteBookmark
 } from "../../database/postg.js";
 
@@ -25,6 +26,24 @@ export const resolvers = {
       } catch (error) {
         console.log(`Something went wrong in getUser query: \n${error}`);
         throw new Error('Failed to get user.');
+      }
+    },
+    getAllTaskGroups: async (parent, args) => {
+      try {
+        const { user_id } = args;
+        return await getAllTaskGroups(user_id);
+      } catch (error) {
+        console.log(`Something went wrong in getTaskGroups query: \n${error}`);
+        throw new Error('Failed to get All TaskGroups.');
+      }
+    },
+    getTaskGroup: async (parent, args) => {
+      try {
+        const { tg_id } = args;
+        return await getTaskGroup(tg_id);
+      } catch (error) {
+        console.log(`Something went wrong in getTaskGroup query: \n${error}`);
+        throw new Error('Failed to get TaskGroup.');
       }
     },
     getTasks: async (parent, args) => {
@@ -78,6 +97,38 @@ export const resolvers = {
       } catch (error) {
         console.log(`Something went wrong in deleteUser mutation: \n${error}`);
         throw new Error('Failed to delete user.');
+      }
+    },
+
+    // TaskGroups
+
+    createTaskGroup: async (parent, args) => {
+      try {
+        const { user_id, tg_name } = args.input;
+        return await createTaskGroup(user_id, tg_name);
+      } catch (error) {
+        console.log(`Something went wrong in createTaskGroup mutation: \n${error}`);
+        throw new Error('Failed to create TaskGroup.');
+      }
+    },
+
+    updateTaskGroup: async (parent, args) => {
+      try {
+        const { tg_id, tg_name } = args.input;
+        return await updateTaskGroup(tg_id, tg_name);
+      } catch (error) {
+        console.log(`Something went wrong in updateTaskGroup mutation: \n${error}`);
+        throw new Error('Failed to update taskGroup.');
+      }
+    },
+
+    deleteTaskGroup: async (parent, args) => {
+      try {
+        const { tg_id } = args.input;
+        return await deleteTaskGroup(tg_id);
+      } catch (error) {
+        console.log(`Something went wrong in deleteTaskGroup mutation: \n${error}`);
+        throw new Error('Failed to delete taskGroup.');
       }
     },
 
