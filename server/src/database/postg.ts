@@ -5,7 +5,6 @@ const { Pool } = pg;
 
 dotenv.config();
 
-
 // here i have to define the interface for type checking
 // it is not tied to the database schema
 // there can be errors in a large codebase in defining the interfaces, since they are not directly tied to table schema
@@ -92,7 +91,7 @@ export const getUser = async (user_id) => {
     else {
       console.log(`no user found with user_id=${user_id}`);
     }
-    return result.rows;
+    return result.rows[0];
   } catch (error) {
     console.log(`something went wrong in getUser \n${error}\nthis is not cool`);
   }
