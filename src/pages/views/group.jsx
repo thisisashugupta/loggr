@@ -3,12 +3,28 @@
 import { useCallback, useEffect, useState } from "react";
 import Task from "../components/task";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import tasks2 from "../utils/mockTasks";
 
-export default function Group({ groupData }) {
+export default function Group({ groupData, setTaskGroups }) {
   const supabase = createClientComponentClient();
   const [tasks, setTasks] = useState([]);
   const [showAddTaskForm, setShowAddTaskForm] = useState(false);
+
+  const handleDeleteTG = async () => {
+    // groupData.tg_id
+    const { data, error } = await supabase
+      .from("taskgroups")
+      .delete()
+      .eq("tg_id", groupData.tg_id)
+      .single();
+
+    let { data: taskgroups } = await supabase
+      .from("taskgroups")
+      .select("tg_name");
+
+    console.log(taskgroups);
+
+    // setTaskGroups(taskgroups);
+  };
 
   const handleAddTask = () => {
     console.log("AddTask clicked");
@@ -16,14 +32,10 @@ export default function Group({ groupData }) {
   };
 
   // show add Tgroup form
-  const handleShowForm = () => {
-    setShowAddTaskForm(true);
-  };
+  const handleShowForm = () => setShowAddTaskForm(true);
   // hide add Tgroup form
-  const handleHideForm = () => {
-    setShowAddTaskForm(false);
-  };
-
+  const handleHideForm = () => setShowAddTaskForm(false);
+  // when form is submitted
   const submitForm = (e) => {
     e.preventDefault();
     console.log("submit form");
@@ -36,7 +48,6 @@ export default function Group({ groupData }) {
         .from("tasks")
         .select("*")
         .eq("tg_id", groupData.tg_id);
-      console.log("tg.data", data);
       setTasks(data);
     }
     getTasks();
@@ -49,6 +60,9 @@ export default function Group({ groupData }) {
         <div className="flex">
           <button className="text-2xl font-bold px-2" onClick={handleAddTask}>
             +
+          </button>
+          <button className="text-2xl font-bold px-2" onClick={handleDeleteTG}>
+            delete_tg
           </button>
         </div>
       </div>

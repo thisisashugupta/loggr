@@ -16,29 +16,23 @@ export default function MainWindow({ session }) {
 
   const user = session?.user;
 
-  // show add Tgroup form
-  const handleShowForm = () => {
-    setShowAddGroupForm(true);
-    console.log("showAddGroupForm", showAddGroupForm);
-  };
-  // hide add Tgroup form
-  const handleHideForm = () => {
-    setShowAddGroupForm(false);
-    console.log("showAddGroupForm", showAddGroupForm);
-  };
+  // const updateTaskGroups = (updatedTaskgroups) => {
+  //   setTaskGroups(updatedTaskgroups);
+  // };
+
   // add group is clicked
-  const handleAddGroupClick = () => {
-    console.log("Button clicked!");
-    handleShowForm();
-    // Add your custom logic here
-  };
-  // tg_name is added
+  const handleAddGroupClick = () => handleShowForm();
+
+  // show add Tgroup form
+  const handleShowForm = () => setShowAddGroupForm(true);
+
+  // hide add Tgroup form
+  const handleHideForm = () => setShowAddGroupForm(false);
+
+  // when form is submitted
   const handleAddTaskGroup = async (e) => {
     e.preventDefault();
     const new_tg_name = e.target.taskGroupName.value;
-    console.log(new_tg_name);
-
-    console.log(supabase);
 
     const { data, error } = await supabase
       .from("taskgroups")
@@ -46,27 +40,18 @@ export default function MainWindow({ session }) {
       .select();
 
     setTaskGroups((taskGroups) => [...taskGroups, data[0]]);
-
-    console.log("add task group data", data[0]);
-
     handleHideForm();
   };
 
+  // useEffect
   useEffect(() => {
     async function getTG() {
       const { data } = await supabase.from("taskgroups").select("*");
       setTaskGroups(data);
     }
     getTG();
+    console.log("use Effect 1");
   }, []); // Fetch taskgroups once on component mount
-
-  useEffect(() => {
-    async function getTG() {
-      const { data } = await supabase.from("taskgroups").select("*");
-      console.log(data);
-    }
-    getTG();
-  }, [taskGroups]); // Fetch taskgroups once on component mount
 
   useEffect(() => {
     async function getUserData() {
@@ -75,6 +60,7 @@ export default function MainWindow({ session }) {
       setUser_id(data.user_id);
     }
     getUserData();
+    console.log("use Effect 2");
   }, []); // Fetch user data once on component mount
 
   return (
@@ -119,7 +105,11 @@ export default function MainWindow({ session }) {
         <div className="w-[100%] h-[94%] flex justify-between items-center">
           <div className="w-[60%] h-[90%]  flex items-center space-x-6">
             {taskGroups.map((taskGroup) => (
-              <Group key={taskGroup.tg_id} groupData={taskGroup} />
+              <Group
+                key={taskGroup.tg_id}
+                groupData={taskGroup}
+                setTaskGroups={setTaskGroups}
+              />
             ))}
           </div>
 
