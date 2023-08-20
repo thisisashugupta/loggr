@@ -6,31 +6,30 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 // views/mainWindow.js
 import Group from "./group";
 import FavTabs from "../components/favtabs.jsx";
-import taskGroups2 from "../utils/mockTaskGroups";
 
 export default function MainWindow({ session }) {
+  const supabase = createClientComponentClient();
   const [username, setUsername] = useState(null);
   const [user_id, setUser_id] = useState(null);
   const [taskGroups, setTaskGroups] = useState([]);
   const [showAddGroupForm, setShowAddGroupForm] = useState(false);
-  const supabase = createClientComponentClient();
 
   const user = session?.user;
 
-  // show add group form
+  // show add Tgroup form
   const handleShowForm = () => {
     setShowAddGroupForm(true);
     console.log("showAddGroupForm", showAddGroupForm);
   };
-  // hide add group form
+  // hide add Tgroup form
   const handleHideForm = () => {
     setShowAddGroupForm(false);
     console.log("showAddGroupForm", showAddGroupForm);
   };
   // add group is clicked
   const handleAddGroupClick = () => {
-    handleShowForm();
     console.log("Button clicked!");
+    handleShowForm();
     // Add your custom logic here
   };
   // tg_name is added
@@ -38,6 +37,7 @@ export default function MainWindow({ session }) {
     e.preventDefault();
     const new_tg_name = e.target.taskGroupName.value;
     console.log(new_tg_name);
+
     console.log(supabase);
 
     const { data, error } = await supabase
@@ -45,7 +45,9 @@ export default function MainWindow({ session }) {
       .insert([{ tg_name: new_tg_name, user_id: user_id }])
       .select();
 
-    console.log(data);
+    setTaskGroups((taskGroups) => [...taskGroups, data[0]]);
+
+    console.log("add task group data", data[0]);
 
     handleHideForm();
   };
@@ -53,30 +55,40 @@ export default function MainWindow({ session }) {
   useEffect(() => {
     async function getTG() {
       const { data } = await supabase.from("taskgroups").select("*");
-      console.log("tg.data", data);
       setTaskGroups(data);
     }
     getTG();
+  }, []); // Fetch taskgroups once on component mount
+
+  useEffect(() => {
+    async function getTG() {
+      const { data } = await supabase.from("taskgroups").select("*");
+      console.log(data);
+    }
+    getTG();
+  }, [taskGroups]); // Fetch taskgroups once on component mount
+
+  useEffect(() => {
     async function getUserData() {
       const { data } = await supabase.from("users").select("*").single();
       setUsername(data.username);
       setUser_id(data.user_id);
     }
     getUserData();
-  }, []);
+  }, []); // Fetch user data once on component mount
 
   return (
     <div className="w-[90%] h-[80%] border-solid border-white border-4 rounded flex justify-center items-center">
       <div className="w-[90%] h-[90%]">
         <div className="flex justify-between">
           <div className="flex space-x-8">
-            <h1 className="font-bold text-6xl">Tuesday 1 Jan</h1>
+            <h1 className="font-bold text-5xl">Tuesday 1 Jan</h1>
 
             <button
               onClick={handleAddGroupClick}
               className="bg-white text-black rounded-xl text-xl p-4"
             >
-              Add Group
+              Add TaskGroup
             </button>
           </div>
 
@@ -110,7 +122,9 @@ export default function MainWindow({ session }) {
               <Group key={taskGroup.tg_id} groupData={taskGroup} />
             ))}
           </div>
-          <div className="w-[40%] h-[90%] flex flex-col justify-between">
+
+          {/*
+<div className="w-[40%] h-[90%] flex flex-col justify-between">
             <div className="h-[44%] border-solid border-white border-4 rounded flex flex-col items-center py-4">
               <FavTabs />
             </div>
@@ -131,6 +145,8 @@ export default function MainWindow({ session }) {
               </div>
             </div>
           </div>
+
+           */}
         </div>
       </div>
     </div>
