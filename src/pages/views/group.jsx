@@ -16,14 +16,14 @@ export default function Group({ groupData, setTaskGroups }) {
       .delete()
       .eq("tg_id", groupData.tg_id)
       .single();
-
+    // console.log(data);
     let { data: taskgroups } = await supabase
       .from("taskgroups")
-      .select("tg_name");
+      .select("*");
 
-    console.log(taskgroups);
+    // console.log(taskgroups);
 
-    // setTaskGroups(taskgroups);
+    setTaskGroups(taskgroups);
   };
 
   const handleAddTask = () => {

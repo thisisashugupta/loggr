@@ -2,6 +2,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useColor } from "@/app/utils/colourContext";
 
 // views/mainWindow.js
 import Group from "./group";
@@ -13,6 +14,7 @@ export default function MainWindow({ session }) {
   const [user_id, setUser_id] = useState(null);
   const [taskGroups, setTaskGroups] = useState([]);
   const [showAddGroupForm, setShowAddGroupForm] = useState(false);
+  const [colorState,setColorState] = useState("#ff9999");
 
   const user = session?.user;
 
@@ -64,7 +66,7 @@ export default function MainWindow({ session }) {
   }, []); // Fetch user data once on component mount
 
   return (
-    <div className="w-[90%] h-[80%] border-solid border-white border-4 rounded flex justify-center items-center">
+    <div className={`w-[90%] h-[80%] border-solid border-white bg-[${colorState+""}] border-4 rounded flex justify-center items-center`}>
       <div className="w-[90%] h-[90%]">
         <div className="flex justify-between">
           <div className="flex space-x-8">
