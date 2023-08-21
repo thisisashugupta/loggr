@@ -10,22 +10,23 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
   const [showAddTaskForm, setShowAddTaskForm] = useState(false);
 
   const handleDeleteTG = async () => {
-    // groupData.tg_id
+    // delete tg query
     const { data, error } = await supabase
       .from("taskgroups")
       .delete()
       .eq("tg_id", groupData.tg_id)
       .single();
+    // fetch tg query
+    let { data: fetchedTaskgroups } = await supabase
+      .from("taskgroups")
+      .select("*");
 
-    let { data: taskgroups } = await supabase.from("taskgroups").select("*");
+    console.log(fetchedTaskgroups);
 
-    console.log(taskgroups);
-
-    setTaskGroups(taskgroups);
+    setTaskGroups(fetchedTaskgroups);
   };
 
   const handleAddTaskClick = () => {
-    console.log("AddTask clicked");
     handleShowForm();
   };
 
@@ -38,8 +39,6 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
     e.preventDefault();
     // submit form
     const new_task_name = e.target.newTaskName.value;
-
-    console.log(new_task_name, groupData.tg_id, user_id, Date.now());
 
     const { data, error } = await supabase
       .from("tasks")
@@ -55,7 +54,6 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
 
     console.log(data);
 
-    console.log("submit form");
     setShowAddTaskForm(false);
     setTasks((tasks) => [...tasks, data[0]]);
   };
@@ -104,7 +102,12 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
 
       <div className="flex flex-col w-[100%] justify-center items-center space-y-4">
         {tasks.map((task) => (
-          <Task key={task.task_id} taskData={task} />
+          <Task
+            key={task.task_id}
+            taskData={task}
+            user_id={user_id}
+            setTasks={setTasks}
+          />
         ))}
       </div>
     </div>

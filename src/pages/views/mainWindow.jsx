@@ -16,7 +16,7 @@ export default function MainWindow({ session }) {
   // const router = useRouter();
 
   const user = session?.user;
-  console.log(session);
+  // console.log(session);
 
   // const updateTaskGroups = (updatedTaskgroups) => {
   //   setTaskGroups(updatedTaskgroups);
