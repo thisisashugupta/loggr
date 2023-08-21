@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Task from "../components/task";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-export default function Group({ groupData, setTaskGroups }) {
+export default function Group({ groupData, setTaskGroups, user_id }) {
   const supabase = createClientComponentClient();
   const [tasks, setTasks] = useState([]);
   const [showAddTaskForm, setShowAddTaskForm] = useState(false);
@@ -17,29 +17,47 @@ export default function Group({ groupData, setTaskGroups }) {
       .eq("tg_id", groupData.tg_id)
       .single();
 
-    let { data: taskgroups } = await supabase
-      .from("taskgroups")
-      .select("tg_name");
+    let { data: taskgroups } = await supabase.from("taskgroups").select("*");
 
     console.log(taskgroups);
 
-    // setTaskGroups(taskgroups);
+    setTaskGroups(taskgroups);
   };
 
-  const handleAddTask = () => {
+  const handleAddTaskClick = () => {
     console.log("AddTask clicked");
     handleShowForm();
   };
 
-  // show add Tgroup form
+  // show add Task form
   const handleShowForm = () => setShowAddTaskForm(true);
-  // hide add Tgroup form
+  // hide add Task form
   const handleHideForm = () => setShowAddTaskForm(false);
   // when form is submitted
-  const submitForm = (e) => {
+  const handleAddTask = async (e) => {
     e.preventDefault();
+    // submit form
+    const new_task_name = e.target.newTaskName.value;
+
+    console.log(new_task_name, groupData.tg_id, user_id, Date.now());
+
+    const { data, error } = await supabase
+      .from("tasks")
+      .insert([
+        {
+          title: new_task_name,
+          tg_id: groupData.tg_id,
+          user_id: user_id,
+          /*modified_at: Date.now(),*/
+        },
+      ])
+      .select();
+
+    console.log(data);
+
     console.log("submit form");
     setShowAddTaskForm(false);
+    setTasks((tasks) => [...tasks, data[0]]);
   };
 
   useEffect(() => {
@@ -58,7 +76,10 @@ export default function Group({ groupData, setTaskGroups }) {
       <div className="w-[90%] flex justify-between py-4">
         <span className="text-4xl text-white ">{groupData.tg_name}</span>
         <div className="flex">
-          <button className="text-2xl font-bold px-2" onClick={handleAddTask}>
+          <button
+            className="text-2xl font-bold px-2"
+            onClick={handleAddTaskClick}
+          >
             +
           </button>
           <button className="text-2xl font-bold px-2" onClick={handleDeleteTG}>
@@ -70,8 +91,8 @@ export default function Group({ groupData, setTaskGroups }) {
       <div>
         {showAddTaskForm && (
           <div className="overlay">
-            <form onSubmit={submitForm}>
-              <input type="text" name="taskName" placeholder="Task Name" />
+            <form onSubmit={handleAddTask}>
+              <input type="text" name="newTaskName" placeholder="Task Name" />
               <button type="submit">Add Task</button>
               <button type="button" onClick={handleHideForm}>
                 Cancel

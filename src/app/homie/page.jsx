@@ -1,7 +1,6 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import MainWindow from "../../pages/views/mainWindow";
-import AccountForm from "./home-view";
 
 export default async function Account() {
   const supabase = createServerComponentClient({ cookies });
@@ -11,8 +10,7 @@ export default async function Account() {
   } = await supabase.auth.getSession();
 
   return (
-    <div>
-      {/*<AccountForm session={session} />*/}
+    <div className="flex justify-center items-center h-[100vh]">
       <MainWindow session={session} />
     </div>
   );

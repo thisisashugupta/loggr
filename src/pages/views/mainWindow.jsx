@@ -2,19 +2,21 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { useRouter } from "next/router";
 
-// views/mainWindow.js
 import Group from "./group";
 import FavTabs from "../components/favtabs.jsx";
 
 export default function MainWindow({ session }) {
   const supabase = createClientComponentClient();
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState("username");
   const [user_id, setUser_id] = useState(null);
   const [taskGroups, setTaskGroups] = useState([]);
   const [showAddGroupForm, setShowAddGroupForm] = useState(false);
+  // const router = useRouter();
 
   const user = session?.user;
+  console.log(session);
 
   // const updateTaskGroups = (updatedTaskgroups) => {
   //   setTaskGroups(updatedTaskgroups);
@@ -87,7 +89,7 @@ export default function MainWindow({ session }) {
                     name="taskGroupName"
                     placeholder="Task Group Name"
                   />
-                  <button type="submit">Add</button>
+                  <button type="submit">Add TG</button>
                   <button type="button" onClick={handleHideForm}>
                     Cancel
                   </button>
@@ -101,6 +103,16 @@ export default function MainWindow({ session }) {
               {username}
             </p>
           </div>
+          <div>
+            <form action="/auth/signout" method="post">
+              <button
+                className="button block bg-white text-black rounded-xl text-xl p-4"
+                type="submit"
+              >
+                Sign out
+              </button>
+            </form>
+          </div>
         </div>
         <div className="w-[100%] h-[94%] flex justify-between items-center">
           <div className="w-[60%] h-[90%]  flex items-center space-x-6">
@@ -109,6 +121,7 @@ export default function MainWindow({ session }) {
                 key={taskGroup.tg_id}
                 groupData={taskGroup}
                 setTaskGroups={setTaskGroups}
+                user_id={user_id}
               />
             ))}
           </div>
