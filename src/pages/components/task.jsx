@@ -1,6 +1,7 @@
+// components/task.jsx
 import Favicon from "../components/favicon";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-// views/task.jsx
+
 export default function Task({ taskData, user_id, setTasks, isBookmark }) {
   const supabase = createClientComponentClient();
 

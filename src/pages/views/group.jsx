@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import Task from "../components/task";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { isValidURL } from "../utils/regex";
+import { fetchWebpageInfo } from "../utils/fetching";
 
 export default function Group({ groupData, setTaskGroups, user_id }) {
   const supabase = createClientComponentClient();
@@ -34,12 +36,29 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
   const handleShowForm = () => setShowAddTaskForm(true);
   // hide add Task form
   const handleHideForm = () => setShowAddTaskForm(false);
-  // when form is submitted
-  const handleAddTask = async (e) => {
-    e.preventDefault();
-    // submit form
-    const new_task_name = e.target.newTaskName.value;
 
+  const addBookmark = async (new_task_name, title) => {
+    const { data, error: supaerror } = await supabase
+      .from("tasks")
+      .insert([
+        {
+          title: title,
+          b_url: new_task_name,
+          tg_id: groupData.tg_id,
+          user_id: user_id,
+          /*modified_at: Date.now(),*/
+        },
+      ])
+      .select();
+
+    console.log("data", data);
+    console.log("supaerror", supaerror);
+
+    if (data === null) return;
+    setTasks((tasks) => [...tasks, data[0]]);
+  };
+
+  const addTask = async (new_task_name) => {
     const { data, error } = await supabase
       .from("tasks")
       .insert([
@@ -54,8 +73,55 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
 
     console.log(data);
 
-    setShowAddTaskForm(false);
     setTasks((tasks) => [...tasks, data[0]]);
+  };
+
+  // when form is submitted
+  const handleAddTask = async (e) => {
+    try {
+      e.preventDefault();
+      // submit form
+
+      const new_task_name = e.target.newTaskName.value;
+
+      // check for bookmark
+      const isBookmark = isValidURL(new_task_name);
+
+      if (isBookmark) {
+        // fetch title
+        const response = await fetch(`/api/fetch?url=${new_task_name}`);
+        const jsonData = await response.json();
+        console.log("jsonData", jsonData);
+
+        if (jsonData !== null) {
+          const { title, error } = jsonData;
+          // either title or error
+
+          if (error) {
+            console.log("title not received, error received");
+
+            console.log(error);
+            await addTask(new_task_name);
+            console.log("adding as task");
+          } else {
+            console.log("title", title);
+
+            if (title === null) {
+              await addTask(new_task_name);
+            } else {
+              await addBookmark(new_task_name, title);
+            }
+          }
+        }
+      } else {
+        // if is not url, do default
+        await addTask(new_task_name);
+      }
+    } catch (e) {
+      console.log("logging catch (e)");
+      console.log(e);
+    }
+    setShowAddTaskForm(false);
   };
 
   useEffect(() => {
