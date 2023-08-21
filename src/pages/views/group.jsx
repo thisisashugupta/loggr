@@ -146,8 +146,8 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
           >
             +
           </button>
-          <button className="text-2xl font-bold px-2" onClick={handleDeleteTG}>
-            delete_tg
+          <button className="text-xl font-bold px-2" onClick={handleDeleteTG}>
+            dlt
           </button>
         </div>
       </div>
