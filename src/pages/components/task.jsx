@@ -1,7 +1,7 @@
-// import { supabase } from "@supabase/auth-ui-shared";
+import Favicon from "../components/favicon";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 // views/task.jsx
-export default function Task({ taskData, user_id, setTasks }) {
+export default function Task({ taskData, user_id, setTasks, isBookmark }) {
   const supabase = createClientComponentClient();
 
   const handleDeleteTask = async (e) => {
@@ -26,9 +26,16 @@ export default function Task({ taskData, user_id, setTasks }) {
   return (
     <div className="w-[90%] flex justify-center bg-white rounded-lg py-4">
       <div className="flex w-[90%] justify-between">
-        <input type="checkbox" className="w-[15%]"></input>
+        {!isBookmark && <input type="checkbox" className="w-[15%]"></input>}
+        {isBookmark && <Favicon taskData={taskData} />}
         <div className="w-[80%] flex">
-          <p className="text-black text-2xl">{taskData.title}</p>
+          {isBookmark ? (
+            <a href={isBookmark} target="_blank">
+              <p className="text-black text-2xl">{taskData.title}</p>
+            </a>
+          ) : (
+            <p className="text-black text-2xl">{taskData.title}</p>
+          )}
         </div>
         <form type="submit" onSubmit={handleDeleteTask}>
           <button className="text-black text-2l">dlt</button>

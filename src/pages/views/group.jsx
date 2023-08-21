@@ -107,6 +107,7 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
             taskData={task}
             user_id={user_id}
             setTasks={setTasks}
+            isBookmark={task.b_url}
           />
         ))}
       </div>
