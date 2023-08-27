@@ -71,7 +71,6 @@ export default function MainWindow({ session }) {
         <div className="flex justify-between">
           <div className="flex space-x-8">
             <h1 className="font-bold text-5xl">Tuesday 1 Jan</h1>
-
             <button
               onClick={handleAddGroupClick}
               className="bg-white text-black rounded-xl text-xl p-4"

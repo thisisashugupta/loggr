@@ -5,12 +5,14 @@ function isValidURL(url) {
 
 export { isValidURL };
 
+/*
 console.log(
   isValidURL("https://www.youtube.com/results?search_query=regex+to+check+url")
 ); // true
 console.log(isValidURL("https://web.whatsapp")); // true
 console.log(isValidURL("example.com")); // true
 console.log(isValidURL("invalid-url")); // false
+*/
 
 /*
 This regular expression checks for the following URL patterns:
