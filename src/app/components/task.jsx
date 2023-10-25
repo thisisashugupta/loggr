@@ -1,5 +1,5 @@
 // components/task.jsx
-import Favicon from "../components/favicon";
+import Favicon from "./favicon";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 
