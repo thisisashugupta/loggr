@@ -1,11 +1,15 @@
 // views/mainWindow.js
 "use client";
-import { useCallback, useEffect, useState } from "react";
+// import { useCallback } from "react";
+import { useEffect, useState } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input"
 // import { useRouter } from "next/router";
 
 import Group from "./group";
-import FavTabs from "../components/favtabs.jsx";
+// import FavTabs from "../components/favtabs.jsx";
 
 export default function MainWindow({ session }) {
   const supabase = createClientComponentClient();
@@ -16,22 +20,17 @@ export default function MainWindow({ session }) {
   // const router = useRouter();
 
   const user = session?.user;
-  // console.log(session);
 
   // const updateTaskGroups = (updatedTaskgroups) => {
   //   setTaskGroups(updatedTaskgroups);
   // };
 
-  // add group is clicked
   const handleAddGroupClick = () => handleShowForm();
 
-  // show add Tgroup form
   const handleShowForm = () => setShowAddGroupForm(true);
 
-  // hide add Tgroup form
   const handleHideForm = () => setShowAddGroupForm(false);
 
-  // when form is submitted
   const handleAddTaskGroup = async (e) => {
     e.preventDefault();
     const new_tg_name = e.target.taskGroupName.value;
@@ -66,67 +65,45 @@ export default function MainWindow({ session }) {
   }, []); // Fetch user data once on component mount
 
   return (
-    <div className="w-[90%] h-[80%] border-solid border-white border-4 rounded flex justify-center items-center">
-      <div className="w-[90%] h-[90%]">
-        <div className="flex justify-between">
-          <div className="flex space-x-8">
-            <h1 className="font-bold text-5xl">Tuesday 1 Jan</h1>
-            <button
-              onClick={handleAddGroupClick}
-              className="bg-white text-black rounded-xl text-xl p-4"
-            >
-              Add TaskGroup
-            </button>
+    <div className="w-[90vw] h-[90vh] p-6 rounded flex justify-center items-center overflow-hidden bg-white">
+      <div className="w-full h-full overflow-hidden">
+
+        <div className="flex items-center justify-between rounded-md m-4 p-2 space-x-2">
+          <div className="flex items-center space-x-8 rounded-lg">
+            <h1 className="font-bold text-4xl">Tuesday, 1 Jan</h1>
+            <Button onClick={handleAddGroupClick}> Add Task Group</Button>
           </div>
 
-          <div>
-            {showAddGroupForm && (
-              <div className="overlay">
-                <form onSubmit={handleAddTaskGroup}>
-                  <input
-                    type="text"
-                    name="taskGroupName"
-                    placeholder="Task Group Name"
-                  />
-                  <button type="submit">Add TG</button>
-                  <button type="button" onClick={handleHideForm}>
-                    Cancel
-                  </button>
-                </form>
-              </div>
-            )}
-          </div>
+          { showAddGroupForm && 
+            <form onSubmit={handleAddTaskGroup} className="flex space-x-2" >
+              <Input name="taskGroupName" placeholder="Task Group name" />
+              <Button type="submit">Add</Button>
+              <Button onClick={handleHideForm}>Cancel</Button>
+            </form>
+          }
 
-          <div>
-            <p className="bg-white text-black rounded-xl text-xl p-4">
-              {username}
-            </p>
-          </div>
-          <div>
-            <form action="/auth/signout" method="post">
-              <button
-                className="button block bg-white text-black rounded-xl text-xl p-4"
-                type="submit"
-              >
-                Sign out
-              </button>
+          <div className="flex space-x-2 rounded-lg">
+            <Button variant="outline">{username}</Button>
+            <form action="/auth/signout" method="post" className=" rounded-lg">
+              <Button variant="destructive" type="submit">Sign out</Button>
             </form>
           </div>
         </div>
-        <div className="w-[100%] h-[94%] flex justify-between items-center">
-          <div className="w-[60%] h-[90%]  flex items-center space-x-6">
-            {taskGroups.map((taskGroup) => (
+
+        <div className="h-[85%] flex items-center justify-start rounded-md m-4 p-2 space-x-2 border-2 border-green-500">
+          {taskGroups.map((taskGroup) => (
+            <ScrollArea className="w-[400px] h-full text-black rounded-md border p-4 bg-slate-500 bg-opacity-60">
               <Group
                 key={taskGroup.tg_id}
                 groupData={taskGroup}
                 setTaskGroups={setTaskGroups}
                 user_id={user_id}
               />
-            ))}
-          </div>
+            </ScrollArea>
+          ))}
 
-          {/*
-<div className="w-[40%] h-[90%] flex flex-col justify-between">
+
+          {/* <div className="flex flex-col justify-between">
             <div className="h-[44%] border-solid border-white border-4 rounded flex flex-col items-center py-4">
               <FavTabs />
             </div>
@@ -146,9 +123,9 @@ export default function MainWindow({ session }) {
                 <a href="#">Link</a>
               </div>
             </div>
-          </div>
+          </div> */}
 
-           */}
+
         </div>
       </div>
     </div>

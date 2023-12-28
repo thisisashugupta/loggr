@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Task from "../components/task";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { isValidURL } from "../utils/regex";
+import { Button } from "@/components/ui/button";
 import { fetchWebpageInfo } from "../utils/fetching";
 
 export default function Group({ groupData, setTaskGroups, user_id }) {
@@ -136,19 +137,12 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
   }, []);
 
   return (
-    <div className="w-[48%] h-[100%] border-solid border-white border-4 rounded flex flex-col items-center ">
-      <div className="w-[90%] flex justify-between py-4">
-        <span className="text-4xl text-white ">{groupData.tg_name}</span>
-        <div className="flex">
-          <button
-            className="text-2xl font-bold px-2"
-            onClick={handleAddTaskClick}
-          >
-            +
-          </button>
-          <button className="text-xl font-bold px-2" onClick={handleDeleteTG}>
-            dlt
-          </button>
+    <div className="w-full h-[100%] rounded flex flex-col items-center">
+      <div className="w-[90%] flex justify-between py-4 space-x-2">
+        <span className="text-2xl font-semibold">{groupData.tg_name}</span>
+        <div className="flex space-x-2">
+          <Button className="hover:bg-blue-500" onClick={handleAddTaskClick}>+</Button>
+          <Button className="hover:bg-red-500" onClick={handleDeleteTG}>-</Button>
         </div>
       </div>
 
@@ -166,7 +160,7 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
         )}
       </div>
 
-      <div className="flex flex-col w-[100%] justify-center items-center space-y-4">
+      <div className="flex flex-col w-full justify-center items-center space-y-4">
         {tasks.map((task) => (
           <Task
             key={task.task_id}
@@ -174,6 +168,7 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
             user_id={user_id}
             setTasks={setTasks}
             isBookmark={task.b_url}
+            className="shadow-lg"
           />
         ))}
       </div>
