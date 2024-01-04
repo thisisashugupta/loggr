@@ -3,22 +3,21 @@ import Favicon from "./favicon";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function Task({ taskData, user_id, setTasks, isBookmark }) {
   const supabase = createClientComponentClient();
   const [isChecked, setIsChecked] = useState(taskData.checked);
 
-  async function handleCheckboxChange(event) {
-    const { data, error } = await supabase
+  async function handleCheckboxChange(checkedValue) {
+    console.log('checkedValue', checkedValue);
+    await supabase // const { data, error } = await supabase
       .from("tasks")
-      .update({ checked: event.target.checked })
+      .update({ checked: checkedValue })
       .eq("task_id", taskData.task_id)
       .select()
       .single();
-
-    console.log(data);
-    setIsChecked(event.target.checked);
-    console.log("checked?", isChecked);
+    setIsChecked(checkedValue);
   }
 
   const handleDeleteTask = async (e) => {
@@ -36,34 +35,35 @@ export default function Task({ taskData, user_id, setTasks, isBookmark }) {
       .select()
       .eq("tg_id", taskData.tg_id);
 
-    console.log(fetchedTasks);
     setTasks(fetchedTasks);
   };
 
   return (
     <div className="w-[90%] flex justify-center bg-white bg-opacity-30 rounded-lg py-4 overflow-hidden">
-      <div className="flex w-[90%] justify-between space-x-4">
+      <div className="flex w-[90%] justify-between items-center space-x-4">
         {!isBookmark && (
-          <input
-            type="checkbox"
-            className="w-[15%]"
-            defaultChecked={isChecked}
-            onChange={(e) => handleCheckboxChange(e)}
-          ></input>
+          
+          <Checkbox 
+            checked={isChecked} 
+            onCheckedChange={handleCheckboxChange}
+            />
+
         )}
-        {isBookmark && <Favicon taskData={taskData} />}
-        <div className="w-[80%] flex">
+
+        <div className="w-[80%] flex justify-start items-center">
           {isBookmark ? (
-            <a href={isBookmark} target="_blank">
-              <p className="text-black text-xl">{taskData.title}</p>
+            <a href={isBookmark} target="_blank" >
+              <p className="text-black text-xl hover:text-blue-500">{taskData.title}</p>
             </a>
           ) : (
             <p className="text-black text-xl">{taskData.title}</p>
           )}
         </div>
+
         <form type="submit" onSubmit={handleDeleteTask}>
           <Button>dlt</Button>
         </form>
+
       </div>
     </div>
   );

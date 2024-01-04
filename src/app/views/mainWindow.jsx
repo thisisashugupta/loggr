@@ -90,7 +90,7 @@ export default function MainWindow({ session }) {
           </div>
         </div>
 
-        <div className="h-[85%] flex items-center justify-start rounded-md m-4 p-2 space-x-2 border-2 border-green-500">
+        <div className="h-[85%] flex items-center justify-start rounded-md m-4 p-2 space-x-2 border-2 border-gray-300 shadow">
           {taskGroups.map((taskGroup) => (
             <ScrollArea className="w-[400px] h-full text-black rounded-md border p-4 bg-slate-500 bg-opacity-60">
               <Group

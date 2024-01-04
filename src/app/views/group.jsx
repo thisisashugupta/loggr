@@ -5,6 +5,7 @@ import Task from "../components/task";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { isValidURL } from "../utils/regex";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input"
 import { fetchWebpageInfo } from "../utils/fetching";
 
 export default function Group({ groupData, setTaskGroups, user_id }) {
@@ -148,13 +149,15 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
 
       <div>
         {showAddTaskForm && (
-          <div className="overlay">
+          <div className="overlay p-4">
             <form onSubmit={handleAddTask}>
-              <input type="text" name="newTaskName" placeholder="Task Name" />
-              <button type="submit">Add Task</button>
-              <button type="button" onClick={handleHideForm}>
-                Cancel
-              </button>
+              <Input type="text" name="newTaskName" placeholder="New Task" />
+              <div className="flex justify-center p-4 space-x-4">
+                <Button type="submit">Add Task</Button>
+                <Button type="button" onClick={handleHideForm}>
+                  Cancel
+                </Button>
+              </div>
             </form>
           </div>
         )}
