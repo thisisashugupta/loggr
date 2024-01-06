@@ -70,7 +70,7 @@ export default function MainWindow({ session }) {
 
         <div className="flex items-center justify-between rounded-md m-4 p-2 space-x-2">
           <div className="flex items-center space-x-8 rounded-lg">
-            <h1 className="font-bold text-4xl">Tuesday, 1 Jan</h1>
+            <h1 className="font-bold text-4xl">{Date().substring(0,10)}</h1>
             <Button onClick={handleAddGroupClick}> Add Task Group</Button>
           </div>
 
@@ -92,9 +92,8 @@ export default function MainWindow({ session }) {
 
         <div className="h-[85%] flex items-center justify-start rounded-md m-4 p-2 space-x-2 border-2 border-gray-300 shadow">
           {taskGroups.map((taskGroup) => (
-            <ScrollArea className="w-[400px] h-full text-black rounded-md border p-4 bg-slate-500 bg-opacity-60">
+            <ScrollArea key={taskGroup.tg_id} className="w-[400px] h-full text-black rounded-md border p-4 bg-slate-500 bg-opacity-60">
               <Group
-                key={taskGroup.tg_id}
                 groupData={taskGroup}
                 setTaskGroups={setTaskGroups}
                 user_id={user_id}

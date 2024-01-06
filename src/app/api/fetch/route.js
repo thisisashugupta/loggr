@@ -1,14 +1,32 @@
+export const dynamic = 'force-dynamic' // defaults to auto
+/*
+export async function GET() {
+  const res = await fetch('https://data.mongodb-api.com/...', {
+    headers: {
+      'Content-Type': 'application/json',
+      'API-Key': process.env.DATA_API_KEY,
+    },
+  })
+  const data = await req.json()
+  
+  return Response.json({ data })
+}
+*/
+
 import axios from "axios";
 import cheerio from "cheerio";
 
-export default async function handler(req, res) {
+export async function POST(req) {
   try {
-    const { url } = req.query;
-
+    const body = await req.json();
+    const { url } = body;
+    console.log('url:', url);
     const { title, favicon } = await fetchWebpageInfo(url);
-    res.status(200).json({ title: title });
+    if (title == null) return res.json({ error: `Unable to fetch data from url ${url}` });
+    return Response.json({ title: title });
   } catch (error) {
-    res.status(500).json({ error: "An error occurred while fetching data" });
+    console.error('Error:', error.message);
+    return Response.json({ error: 'An error occurred while fetching data from url' });
   }
 }
 
