@@ -1,18 +1,4 @@
 // export const dynamic = 'force-dynamic' // defaults to auto
-/*
-export async function GET() {
-  const res = await fetch('https://data.mongodb-api.com/...', {
-    headers: {
-      'Content-Type': 'application/json',
-      'API-Key': process.env.DATA_API_KEY,
-    },
-  })
-  const data = await req.json()
-  
-  return Response.json({ data })
-}
-*/
-
 import axios from "axios";
 import cheerio from "cheerio";
 

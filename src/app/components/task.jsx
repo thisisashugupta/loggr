@@ -1,12 +1,18 @@
-// components/task.jsx
-import Favicon from "./favicon";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+"use client";
+
+import { createBrowserClient } from '@supabase/ssr'
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import Favicon from "./favicon";
 
 export default function Task({ taskData, user_id, setTasks, isBookmark }) {
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
   const [isChecked, setIsChecked] = useState(taskData.checked);
 
   async function handleCheckboxChange(checkedValue) {

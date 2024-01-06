@@ -1,9 +1,15 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createBrowserClient } from '@supabase/ssr'
+
 
 export default function UserForm({ session }) {
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
   const user = session?.user;

@@ -2,7 +2,8 @@
 "use client";
 // import { useCallback } from "react";
 import { useEffect, useState } from "react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createBrowserClient } from '@supabase/ssr'
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input"
@@ -12,7 +13,11 @@ import Group from "./group";
 // import FavTabs from "../components/favtabs.jsx";
 
 export default function MainWindow({ session }) {
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
   const [username, setUsername] = useState("username");
   const [user_id, setUser_id] = useState(null);
   const [taskGroups, setTaskGroups] = useState([]);
