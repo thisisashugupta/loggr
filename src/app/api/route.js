@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-export default function handler(req, res) {
-  res.status(200).json({ status: "this api is working" });
+export async function GET() {
+  return Response.json({ message: 'This api is working.' }, {status: 200});
 }

@@ -1,10 +1,9 @@
-// import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { createServerClient /* , type CookieOptions */ } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import UserForm from './user-form';
+import UserForm from '@/app/user/user-form';
 
 export default async function Account() {
-  // const supabase = createServerComponentClient({ cookies });
+
   const cookieStore = cookies()
 
   const supabase = createServerClient(
@@ -20,12 +19,13 @@ export default async function Account() {
   )
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
-    <div className="flex justify-center items-center h-[100vh]">
-      <UserForm session={session} />
+    <div className="min-h-screen min-w-screen flex flex-col justify-center items-center">
+      <h1 className="text-black text-2xl text-center p-4">Update username</h1>
+      <UserForm user={user} />
     </div>
   );
 }

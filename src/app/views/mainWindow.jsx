@@ -1,19 +1,17 @@
 // views/mainWindow.js
 "use client";
-// import { useCallback } from "react";
+
 import { useEffect, useState } from "react";
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { createBrowserClient } from '@supabase/ssr'
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input"
-// import { useRouter } from "next/router";
-
 import Group from "./group";
+import Link from "next/link";
 // import FavTabs from "../components/favtabs.jsx";
 
 export default function MainWindow({ session }) {
-  // const supabase = createClientComponentClient();
+  
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -22,7 +20,6 @@ export default function MainWindow({ session }) {
   const [user_id, setUser_id] = useState(null);
   const [taskGroups, setTaskGroups] = useState([]);
   const [showAddGroupForm, setShowAddGroupForm] = useState(false);
-  // const router = useRouter();
 
   const user = session?.user;
 
@@ -88,7 +85,7 @@ export default function MainWindow({ session }) {
           }
 
           <div className="flex space-x-2 rounded-lg">
-            <Button variant="outline">{username}</Button>
+            <Link href="/user"><Button variant="outline">{username}</Button></Link>
             <form action="/auth/signout" method="post" className=" rounded-lg">
               <Button variant="destructive" type="submit">Sign out</Button>
             </form>

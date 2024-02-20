@@ -5,7 +5,7 @@ import { createBrowserClient } from '@supabase/ssr'
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import Favicon from "./favicon";
+// import Favicon from "./favicon";
 
 export default function Task({ taskData, user_id, setTasks, isBookmark }) {
   // const supabase = createClientComponentClient();

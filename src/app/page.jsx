@@ -1,7 +1,7 @@
 // import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { createServerClient /* , type CookieOptions */ } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import MainWindow from '../views/mainWindow'
+import MainWindow from '@/app/views/mainWindow'
 
 export default async function Account() {
   // const supabase = createServerComponentClient({ cookies });

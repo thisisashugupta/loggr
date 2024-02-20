@@ -1,14 +1,12 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
-import Task from "../components/task";
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useCallback, useEffect, useState } from "react"
+import Task from "../../components/task";
 import { createBrowserClient } from '@supabase/ssr'
-import { isValidURL } from "../utils/regex";
-import { Button } from "@/components/ui/button";
+import { isValidURL } from "../utils/regex"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 export default function Group({ groupData, setTaskGroups, user_id }) {
-  // const supabase = createClientComponentClient();
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY

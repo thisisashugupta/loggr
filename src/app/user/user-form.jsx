@@ -1,18 +1,20 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+import { useCallback, useEffect, useState } from "react"
 import { createBrowserClient } from '@supabase/ssr'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
+export default function UserForm({ user }) {
 
-export default function UserForm({ session }) {
-  // const supabase = createClientComponentClient();
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
+
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
-  const user = session?.user;
 
   const getProfile = useCallback(async () => {
     try {
@@ -67,39 +69,19 @@ export default function UserForm({ session }) {
   }
 
   return (
-    <div className="form-widget">
-      <div>
-        <h1 className="text-white text-2xl p-4">Update Username</h1>
-      </div>
-      <div>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          value={username || ""}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <button
-          className=" bg-white text-black rounded-xl text-xl p-2 button primary block"
-          onClick={() => updateProfile({ username })}
-          disabled={loading}
-        >
-          {loading ? "Loading ..." : "Update"}
-        </button>
-      </div>
+    <div className="form-widget bg-gray-500 p-16 rounded-xl">
 
       <div>
-        <form action="/auth/signout" method="post">
-          <button
-            className="bg-white text-black rounded-xl text-xl p-2 button block"
-            type="submit"
-          >
-            Sign out
-          </button>
-        </form>
+        <Label htmlFor="username">Username</Label>
+        <Input id="username" type="text" value={username || ""} onChange={(e) => setUsername(e.target.value)} />
       </div>
+
+      <Button onClick={() => updateProfile({ username })} disabled={loading}> {loading ? "Loading ..." : "Update"} </Button>
+
+      <form action="/auth/signout" method="post">
+        <Button variant="destructive" type="submit"> Sign out </Button>
+      </form>
+
     </div>
   );
 }

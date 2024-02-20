@@ -1,7 +1,8 @@
-import { createServerClient /*, type CookieOptions*/ } from '@supabase/ssr'
-import { NextResponse/*, type NextRequest*/ } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse } from 'next/server'
 
-export async function middleware(request/*: NextRequest*/) {
+export async function middleware(request) {
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -54,69 +55,23 @@ export async function middleware(request/*: NextRequest*/) {
     }
   )
 
-  await supabase.auth.getSession()
-
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // if user is signed in and the current path is / redirect the user to /account
-  if (user && request.nextUrl.pathname === "/") {
-    return NextResponse.redirect(new URL("/homie", request.url));
+  // if user is signed in and the current path is /login redirect the user to /
+  if (user && request.nextUrl.pathname === "/login") {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // if user is not signed in and the current path is not / redirect the user to /
-  if (!user && request.nextUrl.pathname !== "/") {
-    return NextResponse.redirect(new URL("/", request.url));
+  // if user is NOT signed in and the current path is not /login redirect the user to /login
+  if (!user && request.nextUrl.pathname !== "/login") {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return response
 }
 
 export const config = {
-  matcher: ["/", "/homie"],
+  matcher: ["/", "/login", "/user"],
 };
-
-
-// export const config = {
-//   matcher: [
-//     /*
-//      * Match all request paths except for the ones starting with:
-//      * - _next/static (static files)
-//      * - _next/image (image optimization files)
-//      * - favicon.ico (favicon file)
-//      * Feel free to modify this pattern to include more paths.
-//      */
-//     '/((?!_next/static|_next/image|favicon.ico).*)',
-//   ],
-// }
-
-
-// import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
-// import { NextResponse } from "next/server";
-
-// export async function middleware(req) {
-//   const res = NextResponse.next();
-//   const supabase = createMiddlewareClient({ req, res });
-
-//   const {
-//     data: { user },
-//   } = await supabase.auth.getUser();
-
-//   // if user is signed in and the current path is / redirect the user to /account
-//   if (user && req.nextUrl.pathname === "/") {
-//     return NextResponse.redirect(new URL("/homie", req.url));
-//   }
-
-//   // if user is not signed in and the current path is not / redirect the user to /
-//   if (!user && req.nextUrl.pathname !== "/") {
-//     return NextResponse.redirect(new URL("/", req.url));
-//   }
-
-//   return res;
-// }
-
-// export const config = {
-//   matcher: ["/", "/homie"],
-// };
