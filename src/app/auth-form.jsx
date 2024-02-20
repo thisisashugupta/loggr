@@ -19,7 +19,7 @@ export default function AuthForm() {
       supabaseClient={supabase}
       view="magic_link"
       appearance={{ theme: ThemeSupa }}
-      theme='dark'
+      // theme='dark'
       providers={["google"]}
       redirectTo={CALLBACK_URL}
     />
