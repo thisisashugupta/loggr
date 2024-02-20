@@ -1,14 +1,12 @@
 "use client";
 
+import { useState } from "react"
 import { createBrowserClient } from '@supabase/ssr'
-// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-// import Favicon from "./favicon";
+import { Checkbox } from "@/components/ui/checkbox"
+import { Trash } from 'lucide-react'
 
 export default function Task({ taskData, user_id, setTasks, isBookmark }) {
-  // const supabase = createClientComponentClient();
+
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -17,31 +15,26 @@ export default function Task({ taskData, user_id, setTasks, isBookmark }) {
 
   async function handleCheckboxChange(checkedValue) {
     console.log('checkedValue', checkedValue);
-    await supabase // const { data, error } = await supabase
-      .from("tasks")
-      .update({ checked: checkedValue })
-      .eq("task_id", taskData.task_id)
-      .select()
-      .single();
+    await supabase // const { data, error } = 
+    .from("tasks")
+    .update({ checked: checkedValue })
+    .eq("task_id", taskData.task_id)
+    .select()
+    .single();
     setIsChecked(checkedValue);
   }
 
   const handleDeleteTask = async (e) => {
     e.preventDefault();
-
-    // delete task query
-    let { data, error } = await supabase
+    try {
+      await supabase
       .from("tasks")
       .delete()
       .eq("task_id", taskData.task_id);
-
-    // fetch tasks query
-    let { data: fetchedTasks, error2 } = await supabase
-      .from("tasks")
-      .select()
-      .eq("tg_id", taskData.tg_id);
-
-    setTasks(fetchedTasks);
+      setTasks((prevTasks) => prevTasks.filter((task) => task.task_id !== taskData.task_id));
+    } catch (error) {
+        throw new Error(error);
+    }
   };
 
   return (
@@ -50,6 +43,7 @@ export default function Task({ taskData, user_id, setTasks, isBookmark }) {
         {!isBookmark && (
           
           <Checkbox 
+            className="hover:bg-gray-400"
             checked={isChecked} 
             onCheckedChange={handleCheckboxChange}
             />
@@ -67,7 +61,7 @@ export default function Task({ taskData, user_id, setTasks, isBookmark }) {
         </div>
 
         <form type="submit" onSubmit={handleDeleteTask}>
-          <Button>dlt</Button>
+          <button className='flex hover:bg-red-400 p-1 rounded' type='submit'><Trash size={20} strokeWidth={2} /></button>
         </form>
 
       </div>

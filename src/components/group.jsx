@@ -1,10 +1,11 @@
 "use client";
 import { useCallback, useEffect, useState } from "react"
-import Task from "../../components/task";
+import Task from "@/components/task";
 import { createBrowserClient } from '@supabase/ssr'
-import { isValidURL } from "../utils/regex"
+import { isValidURL } from "../app/utils/regex"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Plus, Minus } from 'lucide-react'
 
 export default function Group({ groupData, setTaskGroups, user_id }) {
   const supabase = createBrowserClient(
@@ -16,17 +17,13 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
 
   const handleDeleteTG = async () => {
     // delete tg query
-    const { data, error } = await supabase
+    await supabase
       .from("taskgroups")
       .delete()
       .eq("tg_id", groupData.tg_id)
       .single();
-    // fetch tg query
-    let { data: fetchedTaskgroups } = await supabase
-      .from("taskgroups")
-      .select("*");
 
-    setTaskGroups(fetchedTaskgroups);
+    setTaskGroups((prevTaskGroups) => prevTaskGroups.filter((tg) => tg.tg_id !== groupData.tg_id));
   };
 
   const handleAddTaskClick = () => {
@@ -114,15 +111,15 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
     setTasks((tasks) => [...tasks, data[0]]);
   };
 
+  const getTasks = async () => {
+    let { data } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("tg_id", groupData.tg_id);
+    setTasks(data);
+  }
 
   useEffect(() => {
-    async function getTasks() {
-      let { data, error } = await supabase
-        .from("tasks")
-        .select("*")
-        .eq("tg_id", groupData.tg_id);
-      setTasks(data);
-    }
     getTasks();
   }, []);
 
@@ -131,8 +128,8 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
       <div className="w-[90%] flex justify-between py-4 space-x-2">
         <span className="text-2xl font-semibold">{groupData.tg_name}</span>
         <div className="flex space-x-2">
-          <Button className="hover:bg-blue-500" onClick={handleAddTaskClick}>+</Button>
-          <Button className="hover:bg-red-500" onClick={handleDeleteTG}>-</Button>
+          <button className="hover:bg-blue-400 px-2 rounded" onClick={handleAddTaskClick}><Plus size={16} strokeWidth={2} /></button>
+          <button className="hover:bg-red-400 px-2 rounded" onClick={handleDeleteTG}><Minus size={16} strokeWidth={2} /></button>
         </div>
       </div>
 
