@@ -4,11 +4,17 @@
 import { useEffect, useState } from "react";
 import { createBrowserClient } from '@supabase/ssr'
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input"
 import Group from "@/components/group";
 import Link from "next/link";
-// import FavTabs from "../components/favtabs.jsx";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
 
 export default function MainWindow({ session }) {
   
@@ -67,10 +73,11 @@ export default function MainWindow({ session }) {
   }, []); // Fetch user data once on component mount
 
   return (
-    <div className="w-[90vw] h-[90vh] p-6 rounded flex justify-center items-center overflow-hidden bg-white">
-      <div className="w-full h-full overflow-hidden">
+    <div className="w-[90vw] h-[90vh] p-6 rounded flex justify-center items-center bg-white">
+      <div className="w-full h-full">
 
         <div className="flex items-center justify-between rounded-md m-4 p-2 space-x-2">
+
           <div className="flex items-center space-x-8 rounded-lg">
             <h1 className="font-bold text-4xl">{Date().substring(0,10)}</h1>
             <Button onClick={handleAddGroupClick}> Add Task Group</Button>
@@ -92,42 +99,19 @@ export default function MainWindow({ session }) {
           </div>
         </div>
 
-        <div className="h-[85%] flex items-center justify-start rounded-md m-4 p-2 space-x-2 border-2 border-gray-300 shadow">
+        <div className="h-[85%] flex items-start justify-start rounded-md m-4 p-2 space-x-2 border-2 border-gray-300 shadow">
+          <div className='h-full flex overflow-x-auto'>
           {taskGroups.map((taskGroup) => (
-            <ScrollArea key={taskGroup.tg_id} className="w-[400px] h-full text-black rounded-md border p-4 bg-slate-500 bg-opacity-60">
-              <Group
-                groupData={taskGroup}
-                setTaskGroups={setTaskGroups}
-                user_id={user_id}
-              />
+
+            <ScrollArea key={taskGroup.tg_id} className="min-w-[400px] p-4  text-black rounded-md border bg-slate-500 bg-opacity-60">
+              <Group groupData={taskGroup} setTaskGroups={setTaskGroups} user_id={user_id} />
             </ScrollArea>
+
           ))}
-
-
-          {/* <div className="flex flex-col justify-between">
-            <div className="h-[44%] border-solid border-white border-4 rounded flex flex-col items-center py-4">
-              <FavTabs />
-            </div>
-            <div className="h-[54%] border-solid border-white border-4 rounded flex flex-col items-center py-4">
-              <div className="w-[90%]">
-                <h1 className="text-4xl mb-4">Choice News</h1>
-                <p className="text-justify mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum.
-                </p>
-                <a href="#">Link</a>
-              </div>
-            </div>
-          </div> */}
-
-
+          {/* <ScrollBar orientation="horizontal" /> */}
+          </div>
         </div>
+
       </div>
     </div>
   );

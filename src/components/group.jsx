@@ -149,7 +149,7 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
         )}
       </div>
 
-      <div className="flex flex-col w-full justify-center items-center space-y-4">
+      <div className="w-full flex flex-col justify-center items-center space-y-4 x-2">
         {tasks.map((task) => (
           <Task
             key={task.task_id}
