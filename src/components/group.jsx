@@ -124,12 +124,12 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
   }, []);
 
   return (
-    <div className="w-full h-[100%] rounded flex flex-col items-center">
-      <div className="w-[90%] flex justify-between py-4 space-x-2">
-        <span className="text-2xl font-semibold">{groupData.tg_name}</span>
-        <div className="flex space-x-2">
-          <button className="hover:bg-blue-400 px-2 rounded" onClick={handleAddTaskClick}><Plus size={16} strokeWidth={2} /></button>
-          <button className="hover:bg-red-400 px-2 rounded" onClick={handleDeleteTG}><Minus size={16} strokeWidth={2} /></button>
+    <div className="w-full h-full rounded flex flex-col items-center">
+      <div className="w-full grid grid-cols-3 py-4 space-x-2">
+        <p className="col-span-2 text-2xl font-semibold break-words">{groupData.tg_name}</p>
+        <div className="flex justify-end items-start space-x-2">
+          <button className="aspect-square p-2 rounded hover:bg-blue-400" onClick={handleAddTaskClick}><Plus size={16} strokeWidth={2} /></button>
+          <button className="aspect-square p-2 rounded hover:bg-red-400 " onClick={handleDeleteTG}><Minus size={16} strokeWidth={2} /></button>
         </div>
       </div>
 

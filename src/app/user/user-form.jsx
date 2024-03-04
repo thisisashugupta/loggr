@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link'
 import { useCallback, useEffect, useState } from "react"
 import { createBrowserClient } from '@supabase/ssr'
 import { Button } from "@/components/ui/button"
@@ -69,19 +70,15 @@ export default function UserForm({ user }) {
   }
 
   return (
-    <div className="form-widget bg-gray-500 p-16 rounded-xl">
-
+    <div className="m-6 p-6 border-2 border-gray-200 shadow rounded-lg">
       <div>
         <Label htmlFor="username">Username</Label>
         <Input id="username" type="text" value={username || ""} onChange={(e) => setUsername(e.target.value)} />
       </div>
-
-      <Button onClick={() => updateProfile({ username })} disabled={loading}> {loading ? "Loading ..." : "Update"} </Button>
-
-      <form action="/auth/signout" method="post">
-        <Button variant="destructive" type="submit"> Sign out </Button>
-      </form>
-
+      <div className="mt-3 w-full flex justify-between">
+        <Button variant='outline' onClick={() => updateProfile({ username })} disabled={loading}> {loading ? "Loading ..." : "Update"} </Button>
+        <Link href='/'><Button>Cancel</Button></Link>
+      </div>
     </div>
   );
 }

@@ -1,10 +1,9 @@
-// import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { createServerClient /* , type CookieOptions */ } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import MainWindow from '@/app/views/mainWindow'
 
 export default async function Account() {
-  // const supabase = createServerComponentClient({ cookies });
+
   const cookieStore = cookies();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -23,8 +22,6 @@ export default async function Account() {
   } = await supabase.auth.getSession();
 
   return (
-    <div className="min-h-screen min-w-screen flex flex-col justify-center items-center">
-      <MainWindow session={session} />
-    </div>
+    <MainWindow session={session} />
   );
 }
