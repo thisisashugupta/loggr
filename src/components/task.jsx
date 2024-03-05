@@ -38,24 +38,23 @@ export default function Task({ taskData, user_id, setTasks, isBookmark }) {
   };
 
   return (
-    <div className="w-full flex justify-left bg-white bg-opacity-30 rounded-lg p-4 overflow-hidden">
-      <div className="w-full flex gap-2 items-center justify-between">
+    <div className="my-2 p-3 w-full flex items-center justify-between gap-2 rounded-lg bg-opacity-30 shadow overflow-hidden bg-white">
 
         {!isBookmark && (
           <Checkbox 
-            className="hover:bg-gray-400"
+            className="rounded hover:bg-gray-400"
             checked={isChecked} 
             onCheckedChange={handleCheckboxChange}
             />
         )}
 
-        <div className="max-w-[260px] flex justify-center items-center">
+        <div className="max-w-auto flex justify-center items-center">
           {isBookmark ? (
             <a href={isBookmark} target="_blank" >
               <p className="text-black text-lg hover:text-blue-500">{taskData.title}</p>
             </a>
           ) : (
-            <p className="w-full break-words text-black text-lg">{taskData.title}</p>
+            <p className="w-full max-w-[200px] md:max-w-[170px] break-words text-black text-lg">{taskData.title}</p>
           )}
         </div>
 
@@ -63,7 +62,6 @@ export default function Task({ taskData, user_id, setTasks, isBookmark }) {
           <button className='aspect-square hover:bg-red-400 p-1 rounded' type='submit'><Trash size={20} strokeWidth={2} /></button>
         </form>
 
-      </div>
     </div>
   );
 }

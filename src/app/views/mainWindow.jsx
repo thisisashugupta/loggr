@@ -30,8 +30,6 @@ export default function MainWindow({ session }) {
 
   const toggleTgModal = (prevVal) => setShowAddGroupForm(!prevVal);
     // setTgModal(!prevVal);
-    
-  
 
   const handleShowForm = () => setShowAddGroupForm(true);
 
@@ -91,6 +89,7 @@ export default function MainWindow({ session }) {
             <Link href="/user"><Button variant="outline">{username}</Button></Link>
             <form action="/auth/signout" method="post"><Button variant="destructive" type="submit">Sign out</Button></form>
           </div>
+
       </div>
 
       <ScrollArea className='mt-2 mb-4 mx-3 md:m-4 p-2 h-full rounded-md border-2 border-gray-300 shadow'>
@@ -103,7 +102,6 @@ export default function MainWindow({ session }) {
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      
 
     </div>
   );

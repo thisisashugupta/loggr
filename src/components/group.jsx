@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react"
 import Task from "@/components/task";
 import { createBrowserClient } from '@supabase/ssr'
 import { isValidURL } from "../app/utils/regex"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Plus, Minus } from 'lucide-react'
@@ -149,7 +150,7 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
         )}
       </div>
 
-      <div className="w-full flex flex-col justify-center items-center space-y-4 x-2">
+      <ScrollArea className="w-full flex flex-col justify-center items-center">
         {tasks.map((task) => (
           <Task
             key={task.task_id}
@@ -160,7 +161,8 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
             className="shadow-lg"
           />
         ))}
-      </div>
+      </ScrollArea>
+
     </div>
   );
 }
