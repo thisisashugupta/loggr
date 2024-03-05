@@ -1,13 +1,14 @@
 // views/mainWindow.js
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { createBrowserClient } from '@supabase/ssr'
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input"
 import Group from "@/components/group";
 import Link from "next/link";
+import { Label } from "@/components/ui/label";
 
 export default function MainWindow({ session }) {
   
@@ -21,6 +22,13 @@ export default function MainWindow({ session }) {
   const [user_id, setUser_id] = useState(null);
   const [taskGroups, setTaskGroups] = useState([]);
   const [showAddGroupForm, setShowAddGroupForm] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (showAddGroupForm) {
+      inputRef.current.focus();
+    }
+  }, [showAddGroupForm]);
 
   const user = session?.user;
 
@@ -78,11 +86,16 @@ export default function MainWindow({ session }) {
           </div>
 
           { showAddGroupForm && 
-            <form onSubmit={handleAddTaskGroup} className="w-full flex space-x-2" >
-              <Input name="taskGroupName" placeholder="Task Group name" />
-              <Button type="submit">Add</Button>
-              <Button onClick={toggleTgModal}>Cancel</Button>
+          <div className="z-10 w-screen h-screen p-4 fixed top-0 left-0 flex items-center justify-center bg-gray-600 bg-opacity-60">
+            <form className="p-6 bg-white rounded-lg flex flex-col" onSubmit={handleAddTaskGroup} >
+              <Label className="mx-auto">Add New Task Group</Label>
+              <Input className="mt-3" ref={inputRef} name="taskGroupName" placeholder="New Task Group" autoComplete="off" />
+              <div className="mt-3 flex justify-between">
+                <Button type="submit">Add</Button>
+                <Button onClick={toggleTgModal}>Cancel</Button>
+              </div>
             </form>
+          </div>
           }
 
           <div className="w-full flex justify-between md:justify-end space-x-2">
@@ -92,13 +105,9 @@ export default function MainWindow({ session }) {
 
       </div>
 
-      <ScrollArea className='mt-2 mb-4 mx-3 md:m-4 p-2 h-full rounded-md border-2 border-gray-300 shadow'>
-        <div className="w-full rounded-md flex flex-col md:flex-row items-start justify-start">
-          {taskGroups.map((taskGroup) => (
-            <div key={taskGroup.tg_id} className="w-full md:max-w-[300px] md:min-w-[300px] p-4 text-black rounded-md border bg-slate-500 bg-opacity-60">
-              <Group groupData={taskGroup} setTaskGroups={setTaskGroups} user_id={user_id} />
-            </div>
-          ))}
+      <ScrollArea id="bottom-area" className='mt-2 mb-4 mx-3 md:m-4 p-2 h-full rounded-md border-2 border-gray-300 shadow'>
+        <div className="h-full w-full rounded-md flex flex-col md:flex-row items-start justify-start">
+          {taskGroups.map((taskGroup) => <Group key={taskGroup.tg_id} groupData={taskGroup} setTaskGroups={setTaskGroups} user_id={user_id} />)}
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>

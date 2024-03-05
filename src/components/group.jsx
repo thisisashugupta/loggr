@@ -1,10 +1,11 @@
 "use client";
-import { useCallback, useEffect, useState } from "react"
+import { useRef, useEffect, useState } from "react"
 import Task from "@/components/task";
 import { createBrowserClient } from '@supabase/ssr'
 import { isValidURL } from "../app/utils/regex"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Plus, Minus } from 'lucide-react'
 
@@ -15,6 +16,13 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
   )
   const [tasks, setTasks] = useState([]);
   const [showAddTaskForm, setShowAddTaskForm] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (showAddTaskForm) {
+      inputRef.current.focus();
+    }
+  }, [showAddTaskForm]);
 
   const handleDeleteTG = async () => {
     // delete tg query
@@ -125,8 +133,9 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
   }, []);
 
   return (
-    <div className="w-full h-full rounded flex flex-col items-center">
-      <div className="w-full grid grid-cols-3 py-4 space-x-2">
+    <div className="w-full h-full md:max-w-[300px] md:min-w-[300px] p-4 text-black rounded-md border bg-slate-500 bg-opacity-60 rounded flex flex-col items-center">
+      
+      <div className="w-full h-full grid grid-cols-3 py-4 space-x-2">
         <p className="col-span-2 text-2xl font-semibold break-words">{groupData.tg_name}</p>
         <div className="flex justify-end items-start space-x-2">
           <button className="aspect-square p-2 rounded hover:bg-blue-400" onClick={handleAddTaskClick}><Plus size={16} strokeWidth={2} /></button>
@@ -136,10 +145,11 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
 
       <div>
         {showAddTaskForm && (
-          <div className="overlay p-4">
-            <form onSubmit={handleAddTask}>
-              <Input type="text" name="newTaskName" placeholder="New Task" />
-              <div className="flex justify-center p-4 space-x-4">
+          <div className="z-10 w-screen h-screen p-4 fixed top-0 left-0 flex items-center justify-center bg-gray-600 bg-opacity-60">
+            <form className="p-6 bg-white rounded-lg flex flex-col" onSubmit={handleAddTask}>
+              <Label className="mx-auto">Add New Task</Label>
+              <Input className="mt-3" ref={inputRef} type="text" name="newTaskName" placeholder="New Task" autoComplete="off" />
+              <div className="mt-3 flex justify-between">
                 <Button type="submit">Add Task</Button>
                 <Button type="button" onClick={() => setShowAddTaskForm(false)}>
                   Cancel
