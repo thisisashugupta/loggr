@@ -76,7 +76,7 @@ export default function MainWindow({ session }) {
   }, []); // Fetch user data once on component mount
 
   return (
-    <div className="w-screen h-screen bg-white overflow-hidden flex flex-col">
+    <div className="w-screen h-dvh bg-white overflow-hidden flex flex-col">
 
       <div id="top-bar" className="mx-6 mt-6 mb-2 md:p-4 flex flex-col-reverse md:flex-row items-center justify-between rounded-md gap-4">
 
@@ -86,7 +86,7 @@ export default function MainWindow({ session }) {
           </div>
 
           { showAddGroupForm && 
-          <div className="z-10 w-screen h-screen p-4 fixed top-0 left-0 flex items-center justify-center bg-gray-600 bg-opacity-60">
+          <div className="z-10 w-screen h-dvh p-4 fixed top-0 left-0 flex items-center justify-center bg-gray-600 bg-opacity-60">
             <form className="p-6 bg-white rounded-lg flex flex-col" onSubmit={handleAddTaskGroup} >
               <Label className="mx-auto">Add New Task Group</Label>
               <Input className="mt-3" ref={inputRef} name="taskGroupName" placeholder="New Task Group" autoComplete="off" />

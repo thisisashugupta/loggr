@@ -24,7 +24,7 @@ export default async function Account() {
   } = await supabase.auth.getUser();
 
   return (
-    <div className="min-h-screen min-w-screen">
+    <div className="min-h-dvh min-w-screen">
 
       <div className='p-6 w-full flex justify-between items-center'>
         <h1 className="font-medium text-lg text-center">Update username</h1>
