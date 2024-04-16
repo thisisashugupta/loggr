@@ -133,7 +133,7 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
   }, []);
 
   return (
-    <div className="w-full h-full md:max-w-[300px] md:min-w-[300px] p-4 text-black rounded-md border bg-slate-500 bg-opacity-60 rounded flex flex-col items-center">
+    <div className="w-full h-full md:max-w-[300px] md:min-w-[300px] p-4 text-black rounded-md border bg-blue-200 rounded flex flex-col items-center">
       
       <div className="w-full h-full grid grid-cols-3 py-4 space-x-2">
         <p className="col-span-2 text-2xl font-semibold break-words">{groupData.tg_name}</p>
@@ -145,7 +145,7 @@ export default function Group({ groupData, setTaskGroups, user_id }) {
 
       <div>
         {showAddTaskForm && (
-          <div className="z-10 w-screen h-dvh p-4 fixed top-0 left-0 flex items-center justify-center bg-gray-600 bg-opacity-60">
+          <div className="z-10 w-screen h-screen p-4 fixed top-0 left-0 flex items-center justify-center bg-gray-600 bg-opacity-60">
             <form className="p-6 bg-white rounded-lg flex flex-col" onSubmit={handleAddTask}>
               <Label className="mx-auto">Add New Task</Label>
               <Input className="mt-3" ref={inputRef} type="text" name="newTaskName" placeholder="New Task" autoComplete="off" />

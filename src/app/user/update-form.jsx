@@ -6,8 +6,11 @@ import { createBrowserClient } from '@supabase/ssr'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useRouter } from 'next/navigation'
 
 export default function UserForm({ user }) {
+
+  const router = useRouter();
 
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -61,6 +64,7 @@ export default function UserForm({ user }) {
       });
       if (error) throw error;
       alert("User Profile updated!");
+      router.push("/");
     } catch (error) {
       alert("Error updating the data!");
       console.log(error);
